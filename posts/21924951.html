@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>Gradle使用方法详解 | Bobit-你好世界</title>
+  <meta name="description" content="Gradle Gradle 是基于 Groovy 语言的，Groovy 大家应该很熟悉吧，是基于 Java Virtual Machine 的敏捷开发语言，它结合了 Python、Ruby 和 Smalltalk 的许多强大的特性。  前言 构建，软件生命周期中重要的一环，在现代软件开发过程中，起着越来越重要的作用。过去在Java或类Java的世界里，Ant、Maven再熟悉不过了，Maven凭">
+<meta name="keywords" content="Gradle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gradle使用方法详解">
+<meta property="og:url" content="https://bobit.github.io/posts/21924951.html">
+<meta property="og:site_name" content="Bobit-你好世界">
+<meta property="og:description" content="Gradle Gradle 是基于 Groovy 语言的，Groovy 大家应该很熟悉吧，是基于 Java Virtual Machine 的敏捷开发语言，它结合了 Python、Ruby 和 Smalltalk 的许多强大的特性。  前言 构建，软件生命周期中重要的一环，在现代软件开发过程中，起着越来越重要的作用。过去在Java或类Java的世界里，Ant、Maven再熟悉不过了，Maven凭">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-27T12:39:59.943Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Gradle使用方法详解">
+<meta name="twitter:description" content="Gradle Gradle 是基于 Groovy 语言的，Groovy 大家应该很熟悉吧，是基于 Java Virtual Machine 的敏捷开发语言，它结合了 Python、Ruby 和 Smalltalk 的许多强大的特性。  前言 构建，软件生命周期中重要的一环，在现代软件开发过程中，起着越来越重要的作用。过去在Java或类Java的世界里，Ant、Maven再熟悉不过了，Maven凭">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://bobit.github.io/posts/21924951.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="/" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Bobit</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索">
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech="">
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope="" itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope="" itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithms/">Algorithms</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/English/">English</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/">Maven</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Source/">Source</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/Netty/">Netty</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/并发编程/">并发编程</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能优化/">性能优化</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ActiveMQ/">ActiveMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithms/">Algorithms</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anaconda/">Anaconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQ/">MQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/">MongoDB</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/">Netty</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Postman/">Postman</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Robo-3T/">Robo 3T</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Serializable/">Serializable</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/">Spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring5/">Spring5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/car/">car</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/concurrent/">concurrent</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eat/">eat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/互联网/">互联网</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/克隆/">克隆</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/序列化/">序列化</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高并发/">高并发</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高负载/">高负载</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ActiveMQ/" style="font-size: 13px;">ActiveMQ</a> <a href="/tags/Algorithms/" style="font-size: 13px;">Algorithms</a> <a href="/tags/Anaconda/" style="font-size: 13px;">Anaconda</a> <a href="/tags/Gradle/" style="font-size: 13.33px;">Gradle</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/IDEA/" style="font-size: 13px;">IDEA</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/MQ/" style="font-size: 13px;">MQ</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13px;">Netty</a> <a href="/tags/Postman/" style="font-size: 13px;">Postman</a> <a href="/tags/Redis/" style="font-size: 13px;">Redis</a> <a href="/tags/Robo-3T/" style="font-size: 13px;">Robo 3T</a> <a href="/tags/Serializable/" style="font-size: 13px;">Serializable</a> <a href="/tags/Spring/" style="font-size: 13px;">Spring</a> <a href="/tags/Spring5/" style="font-size: 13px;">Spring5</a> <a href="/tags/car/" style="font-size: 13.33px;">car</a> <a href="/tags/concurrent/" style="font-size: 13px;">concurrent</a> <a href="/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/tags/eat/" style="font-size: 13px;">eat</a> <a href="/tags/life/" style="font-size: 14px;">life</a> <a href="/tags/linux/" style="font-size: 13px;">linux</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/python/" style="font-size: 13.67px;">python</a> <a href="/tags/互联网/" style="font-size: 13.33px;">互联网</a> <a href="/tags/克隆/" style="font-size: 13.33px;">克隆</a> <a href="/tags/并发/" style="font-size: 13px;">并发</a> <a href="/tags/序列化/" style="font-size: 13.33px;">序列化</a> <a href="/tags/性能优化/" style="font-size: 13px;">性能优化</a> <a href="/tags/数据库/" style="font-size: 13px;">数据库</a> <a href="/tags/英语/" style="font-size: 13.67px;">英语</a> <a href="/tags/转载/" style="font-size: 13px;">转载</a> <a href="/tags/高并发/" style="font-size: 13.33px;">高并发</a> <a href="/tags/高负载/" style="font-size: 13px;">高负载</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/11/">十一月 2010</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/分布式/">分布式</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/分布式/Netty/">Netty</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/21d654b6.html" class="title">Netty入门</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-12-13T14:29:17.000Z" itemprop="datePublished">2017-12-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/English/">English</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/9253509e.html" class="title">互联网常用名词大全</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:29:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/48156525.html" class="title">高并发高负载类网站中数据库的设计</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:28:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/396258dc.html" class="title">高并发系统的开发注意事项</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:27:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/18c040aa.html" class="title">Java日志框架总结</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:26:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope="" itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#gradle"><span class="toc-number">1.</span> <span class="toc-text"> Gradle</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">2.</span> <span class="toc-text"> 前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#历程"><span class="toc-number">3.</span> <span class="toc-text"> 历程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#为什么选择gradle"><span class="toc-number">4.</span> <span class="toc-text"> 为什么选择Gradle</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#从使用方面来看"><span class="toc-number">4.1.</span> <span class="toc-text"> 从使用方面来看：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从框架方向来看"><span class="toc-number">4.2.</span> <span class="toc-text"> 从框架方向来看：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#从语言特性来看"><span class="toc-number">4.3.</span> <span class="toc-text"> 从语言特性来看：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置"><span class="toc-number">5.</span> <span class="toc-text"> 配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">5.1.</span> <span class="toc-text"> 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设置环境变量"><span class="toc-number">5.2.</span> <span class="toc-text"> 设置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#jar包目录"><span class="toc-number">5.3.</span> <span class="toc-text"> Jar包目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改本地库的位置"><span class="toc-number">5.4.</span> <span class="toc-text"> 修改本地库的位置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成到ide中sts"><span class="toc-number">5.5.</span> <span class="toc-text"> 集成到IDE中（STS）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sts设置gradle下jar包的保存地址"><span class="toc-number">5.6.</span> <span class="toc-text"> STS设置gradle下jar包的保存地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用maven本地缓存库"><span class="toc-number">5.7.</span> <span class="toc-text"> 使用Maven本地缓存库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gradle中下载慢的问题"><span class="toc-number">5.8.</span> <span class="toc-text"> Gradle中下载慢的问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建项目"><span class="toc-number">6.</span> <span class="toc-text"> 创建项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gradle和maven比较"><span class="toc-number">7.</span> <span class="toc-text"> Gradle和Maven比较</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gradle项目与maven项目相互转化"><span class="toc-number">7.1.</span> <span class="toc-text"> gradle项目与maven项目相互转化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gradle-的仓库repositories"><span class="toc-number">8.</span> <span class="toc-text"> Gradle 的仓库(Repositories)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1使用本地maven-仓库"><span class="toc-number">8.1.</span> <span class="toc-text"> 1.使用本地maven 仓库：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2使用远程maven-仓库"><span class="toc-number">8.2.</span> <span class="toc-text"> 2.使用远程maven 仓库：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3使用本地的ivy-仓库"><span class="toc-number">8.3.</span> <span class="toc-text"> 3.使用本地的ivy 仓库：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4使用远程的ivy-仓库"><span class="toc-number">8.4.</span> <span class="toc-text"> 4.使用远程的ivy 仓库：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-maven-库"><span class="toc-number">9.</span> <span class="toc-text"> 使用 Maven 库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#gradle项目与maven项目相互转化-2"><span class="toc-number">10.</span> <span class="toc-text"> gradle项目与maven项目相互转化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java项目结构"><span class="toc-number">11.</span> <span class="toc-text"> Java项目结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java工程中的任务"><span class="toc-number">12.</span> <span class="toc-text"> Java工程中的任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#faq"><span class="toc-number">13.</span> <span class="toc-text"> FAQ</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#q"><span class="toc-number">13.1.</span> <span class="toc-text"> Q.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#a"><span class="toc-number">13.2.</span> <span class="toc-text"> A.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#q-2"><span class="toc-number">13.3.</span> <span class="toc-text"> Q.</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#a-2"><span class="toc-number">13.4.</span> <span class="toc-text"> A.</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">14.</span> <span class="toc-text"> 参考：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">15.</span> <span class="toc-text"> 小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#附录"><span class="toc-number">16.</span> <span class="toc-text"> 附录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gradle主配置文件"><span class="toc-number">16.1.</span> <span class="toc-text"> gradle主配置文件</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Setting/Gradle" class="article article-type-post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Gradle使用方法详解
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/posts/21924951.html" class="article-date">
+	  <time datetime="2015-11-13T03:11:35.000Z" itemprop="datePublished">2015-11-13</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Tools/">Tools</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Gradle/">Gradle</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/posts/21924951.html#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3.3k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 12(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="gradle"><a class="markdownIt-Anchor" href="#gradle"></a> Gradle</h2>
+<p>Gradle 是基于 Groovy 语言的，Groovy 大家应该很熟悉吧，是基于 Java Virtual Machine 的敏捷开发语言，它结合了 Python、Ruby 和 Smalltalk 的许多强大的特性。</p>
+<h2 id="前言"><a class="markdownIt-Anchor" href="#前言"></a> 前言</h2>
+<p>构建，软件生命周期中重要的一环，在现代软件开发过程中，起着越来越重要的作用。过去在Java或类Java的世界里，Ant、Maven再熟悉不过了，Maven凭借其强大的依赖配置战胜Ant，基本上成为了Java构建的标准。而在现代，系统日益复杂，构建的灵活性要求越来越高，比如：构建过程中需要打包上传到服务器，Maven无法很好地支持这种复杂的系统构建，所以，我选择了Gradle，一个基于Groovy，更灵活更强大的构建系统，能帮助我们构建更复杂的项目。</p>
+<h2 id="历程"><a class="markdownIt-Anchor" href="#历程"></a> 历程</h2>
+<p>一开始的时候，我们只有一个工程，所有要用到的jar包都放到工程目录下面，时间长了，工程越来越大，使用到的jar包也越来越多，难以理解jar之间的依赖关系。再后来我们把旧的工程拆分到不同的工程里，靠ide来管理工程之间的依赖关系，各工程下的jar包依赖是杂乱的。一段时间后，我们发现用ide来管理项程很不方便，比如不方便脱离ide自动构建，于是我们写自己的ant脚本。再后来，维护ant脚本变得痛苦，管理jar包更加痛苦。svn能管理源码的版本，却不能管理构建出的部署部件的版本。于是我们决定用maven，然而pom.xml的配置实在太繁了！</p>
+<h2 id="为什么选择gradle"><a class="markdownIt-Anchor" href="#为什么选择gradle"></a> 为什么选择Gradle</h2>
+<h3 id="从使用方面来看"><a class="markdownIt-Anchor" href="#从使用方面来看"></a> 从使用方面来看：</h3>
+<ol>
+<li>
+<p>groovy 比 xml好用<br>
+Gradle用groovy来做为build脚本，比xml要易读易用得多。用过ant的人都知道，要在ant里面表达一个if分支功能有多么的麻烦，不直观。由于gradle的build脚本就是groovy程序，所以做分支循环等非常方便自然。</p>
+</li>
+<li>
+<p>Convention over Configuration 比写大量ant基础脚本方便<br>
+用ant的时候，要得定义哪里放源码，哪里放jar包，哪里放编译出的class文件等等，每个项目都要这样做，非常麻烦。gradle和maven一样，都定义了一个默认的目录结构，只要按要这个默认的规则来做，就不需要多写一行代码。而且gradle的目录的结构规范和maven是一样的。</p>
+</li>
+<li>
+<p>支付定义task，比maven灵活<br>
+maven可以帮助管理依赖关系，但是要在maven里实现一个简单的自定义功能，就很麻烦，要得写maven插件，而在gradle里，task是一等公民，可以轻易的添加自己的功能。</p>
+</li>
+<li>
+<p>灵活的依赖管理<br>
+ant没有依赖管理的功能，都要自己手动做，maven的依赖管理很死板，只能依赖于标准的maven artifact，不能依赖本地的某个jar文件或者其它的源码。而gradle则可以混合地同时支持这些依赖方法，这样可以让旧项目的迁移容易得多。</p>
+</li>
+<li>
+<p>默认就具有丰富的功能<br>
+只要安装好gradle，默认就支持java项目,war项目，ear项目，做单元测试，生成jar包，上传jar包到maven服务器，等等功能。一般的项目都已经够用了。</p>
+</li>
+</ol>
+<h3 id="从框架方向来看"><a class="markdownIt-Anchor" href="#从框架方向来看"></a> 从框架方向来看：</h3>
+<p>Gradle是很成熟的技术，可以处理大规模构建<br>
+Gradle对多语言、多平台有更natural的支持<br>
+Gradle关注在构建效率上<br>
+Gradle发布很频繁，重要feature开发计划透明化<br>
+Gradle社区很活跃，并且增加迅速</p>
+<h3 id="从语言特性来看"><a class="markdownIt-Anchor" href="#从语言特性来看"></a> 从语言特性来看：</h3>
+<p>代码很精简<br>
+Gradle基于Groovy，能完成复杂系统的构建任务<br>
+DSL比XML更简洁高效</p>
+<h2 id="配置"><a class="markdownIt-Anchor" href="#配置"></a> 配置</h2>
+<h3 id="安装"><a class="markdownIt-Anchor" href="#安装"></a> 安装</h3>
+<p>安装JDK java -version<br>
+下载Gradle, <a href="https://gradle.org" target="_blank" rel="noopener">https://gradle.org</a> 完全版</p>
+<h3 id="设置环境变量"><a class="markdownIt-Anchor" href="#设置环境变量"></a> 设置环境变量</h3>
+<ul>
+<li>用户变量 GRADLE_HOME</li>
+<li>环境变量 path 中增加 %GRADLE_HOME%\bin;</li>
+<li>gradle -version</li>
+</ul>
+<h3 id="jar包目录"><a class="markdownIt-Anchor" href="#jar包目录"></a> Jar包目录</h3>
+<p>E:\localRepoGradle\caches\modules-2\files-2.1</p>
+<h3 id="修改本地库的位置"><a class="markdownIt-Anchor" href="#修改本地库的位置"></a> 修改本地库的位置</h3>
+<p>如果不想使用缺省目录，则可以设置环境变量GRADLE_USER_HOME的路径，就可改变gradle的缓存目录。<br>
+使用Gradle去构建项目，但是没有办法像Maven一样配置Setting文件来修改本地库的位置。后来纠结很久，修改系统的环境变量即可。注意：修改完成后一定要重启计算机才可以。</p>
+<h3 id="集成到ide中sts"><a class="markdownIt-Anchor" href="#集成到ide中sts"></a> 集成到IDE中（STS）</h3>
+<p>1、  打开eclipse，Help–&gt;Install new software,输入<br>
+在线安装地址<br>
+<a href="http://dist.springsource.com/release/TOOLS/update/e4.4%E6%88%96%E8%80%85" target="_blank" rel="noopener">http://dist.springsource.com/release/TOOLS/update/e4.4或者</a><br>
+<a href="http://dist.springsource.com/release/TOOLS/gradle" target="_blank" rel="noopener">http://dist.springsource.com/release/TOOLS/gradle</a><br>
+（貌似不翻墙也是可以下载，但是访问特别慢，建议翻墙下载。）</p>
+<p>2、  选择Core / Eclipse Integration for Gradle -&gt; Gradle IDE</p>
+<p>3、  设置下jar下载保存的地址,不然默认保存在C盘, “window-&gt;preferences-&gt;gradle” (可以不设置,我个人不喜欢在C盘)<br>
+使用以下配置文件对Gradle的构建进行配置：</p>
+<p>Gradle构建脚本（build.gradle）指定了一个项目和它的任务。<br>
+Gradle属性文件（gradle.properties）用来配置构建属性。<br>
+Gradle设置文件（gradle.settings）对于只有一个项目的构建而言是可选的，如果我们的构建中包含多于一个项目，那么它就是必须的，因为它描述了哪一个项目参与构建。每一个多项目的构建都必须在项目结构的根目录中加入一个设置文件。</p>
+<h3 id="sts设置gradle下jar包的保存地址"><a class="markdownIt-Anchor" href="#sts设置gradle下jar包的保存地址"></a> STS设置gradle下jar包的保存地址</h3>
+<p>“window-&gt;preferences-&gt;gradle”</p>
+<h3 id="使用maven本地缓存库"><a class="markdownIt-Anchor" href="#使用maven本地缓存库"></a> 使用Maven本地缓存库</h3>
+<p>从Maven切换到Gradle，原有的几G的本地缓存库当然想继续使用。在用户手册中找到了答案。在50.6.3章节。大概意思是说使用mavenLocal()配置maven的本地仓库后，gradle默认会按以下顺序去查找本地的仓库：USER_HOME/.m2/settings.xml &gt;&gt; M2_HOME/conf/settings.xml &gt;&gt; USER_HOME/.m2/repository。<br>
+如果想使用Maven本地缓存，需要定义：</p>
+<p>repositories {<br>
+//本地库，local repository(${user.home}/.m2/repository)<br>
+mavenLocal()<br>
+//Maven中心库(<a href="http://repo1.maven.org/maven2" target="_blank" rel="noopener">http://repo1.maven.org/maven2</a>)<br>
+//mavenCentral()<br>
+}<br>
+注意：</p>
+<ol>
+<li>
+<p>在USER_HOME/.m2下的settings.xml文件必须存在（不存在，Gradle会无法使用。）。</p>
+</li>
+<li>
+<p>M2_HOME/conf下的settings.xml文件配置后未起作用。</p>
+</li>
+</ol>
+<h3 id="gradle中下载慢的问题"><a class="markdownIt-Anchor" href="#gradle中下载慢的问题"></a> Gradle中下载慢的问题</h3>
+<p>一个简单的办法，修改项目根目录下的build.gradle，mavenCentral()替换掉即可：<br>
+repositories {<br>
+//如果maven本地缓存库没有，则下载到Gradle目录<br>
+mavenLocal()<br>
+maven{ url ‘<a href="http://maven.oschina.net/content/groups/public/" target="_blank" rel="noopener">http://maven.oschina.net/content/groups/public/</a>’}<br>
+}</p>
+<h2 id="创建项目"><a class="markdownIt-Anchor" href="#创建项目"></a> 创建项目</h2>
+<p>1、  创建一个gradle项目，File -&gt; New -&gt; Project -&gt; Gradle -&gt; Gradle Project -&gt; Next，输入项目的名称，选择Sample project Java Quickstart,点击完成即可<br>
+2、  添加一个jar包依赖，编辑文件build.gradle,找到dependencies,在里面添加一条jar的信息,例如：<br>
+dependencies {<br>
+compile group: ‘commons-collections’, name: ‘commons-collections’, version: ‘3.2’<br>
+//添加一个spring 依赖<br>
+compile ‘org.springframework:spring-core:4.1.2.RELEASE’<br>
+testCompile group: ‘junit’, name: ‘junit’, version: ‘4.+’<br>
+}<br>
+3、  刷新项目，使得eclipse自动下载jar包，右击项目-&gt;Gradle-&gt;Refresh Dependencies<br>
+4、  打包项目，右击项目-&gt;Run As -&gt; Gradle Build… -&gt; 在命令行里面输入build,点击运行即可</p>
+<h2 id="gradle和maven比较"><a class="markdownIt-Anchor" href="#gradle和maven比较"></a> Gradle和Maven比较</h2>
+<p>Gradle和Maven在依赖管理上几乎差不多，核心的概念是一样的，只不过Gradle语法更精简，并且多了一些更灵活的自定义配置。我们先看一个例子，Maven的pom.xml：<br>
+<dependencies><br>
+<dependency><br>
+<groupid>org.springframework</groupid><br>
+<artifactid>spring-core</artifactid><br>
+</dependency><br>
+<dependency><br>
+<groupid>org.springframework</groupid><br>
+<artifactid>spring-beans</artifactid><br>
+</dependency><br>
+<dependency><br>
+<groupid>org.springframework</groupid><br>
+<artifactid>spring-context</artifactid><br>
+</dependency><br>
+<dependency><br>
+<groupid>junit</groupid><br>
+<artifactid>junit</artifactid><br>
+</dependency><br>
+</dependencies><br>
+更换成Gradle脚本，结果是这样：<br>
+dependencies {<br>
+compile(‘org.springframework:spring-core:3.2.4.RELEASE’)<br>
+compile(‘org.springframework:spring-beans:3.2.4.RELEASE’)<br>
+compile(‘org.springframework:spring-context:3.2.4.RELEASE’)<br>
+testCompile(‘junit:junit:4.7’)<br>
+}<br>
+代码块少了很多。试想，生产环境下的中、大型应用如果用都用Gradle替换Maven，那势必会大大减少配置文件代码块，并有更强的可读性，也就意味着系统更加稳健。<br>
+1，Gradle在依赖配置上面，和Maven一样，支持传递性依赖，然后和Maven不同的是，它还支持排除传递性依赖以及关闭传递性依赖。<br>
+2，Gradle的依赖scope，也基本和Maven一样，不过它是通过配置来定义，plugin来支撑和加强的，所以除了基本的compile、runtime等scope外，Gradle还可以自定义出很多配置，针对不同的配置写不同的task来完成更复杂更灵活的构建任务。<br>
+依赖相关的仓库配置很灵活，支持多种repository，</p>
+<h3 id="gradle项目与maven项目相互转化"><a class="markdownIt-Anchor" href="#gradle项目与maven项目相互转化"></a> gradle项目与maven项目相互转化</h3>
+<p>gradle这几年发展迅猛，github越来越多的项目都开始采用gradle来构建了，但是并不是所有人都对gradle很熟悉，下面的方法可以把gradle转成maven项目，前提gradle项目目录结构保持跟maven一样的约定，即/src/main/java这一套。</p>
+<ol>
+<li>gradle --&gt; maven</li>
+</ol>
+<p>在build.gradle中增加以下内容(group,version可自行修改，artifactId默认为目录名称)</p>
+<p>apply plugin: ‘java’<br>
+apply plugin: ‘maven’</p>
+<p>group = ‘com.demo’<br>
+version = ‘0.1-dev’<br>
+sourceCompatibility = 1.6</p>
+<p>然后./gradlew build ，成功后将在build\poms目录下生成pom-default.xml文件，把它复制到根目录下，改名成pom.xml即可</p>
+<p>当然，通过修改build.gradle 也可以直接在根目录下生成pom.xml</p>
+<p>task writeNewPom &lt;&lt; {<br>
+pom {<br>
+project {<br>
+inceptionYear ‘2008’<br>
+licenses {<br>
+license {<br>
+name ‘The Apache Software License, Version 2.0’<br>
+url ‘<a href="http://www.apache.org/licenses/LICENSE-2.0.txt" target="_blank" rel="noopener">http://www.apache.org/licenses/LICENSE-2.0.txt</a>’<br>
+distribution ‘repo’<br>
+}<br>
+}<br>
+}<br>
+}.writeTo(&quot;$buildDir/pom.xml&quot;)<br>
+}</p>
+<ol>
+<li>maven --&gt; gradle</li>
+</ol>
+<p>先保证本机安装了gradle 2.0以上的版本<br>
+然后在maven根目录下运行<br>
+gradle init --type pom</p>
+<h2 id="gradle-的仓库repositories"><a class="markdownIt-Anchor" href="#gradle-的仓库repositories"></a> Gradle 的仓库(Repositories)</h2>
+<pre><code>首先，Repository 是什么？Repository 是文件的集合，这些文件，通过group、name和version组织起来。
+在使用上，主要体现为jar 和 xml文件,Gradle 通过这些Repository 找到外部依赖(external dependencies.)
+Gradle 并不默认指定任何仓库。它支持很多中仓库，如maven、ivy，通过文件访问或者通过HTTP 访问。下面举例说明：
+</code></pre>
+<h3 id="1使用本地maven-仓库"><a class="markdownIt-Anchor" href="#1使用本地maven-仓库"></a> 1.使用本地maven 仓库：</h3>
+<pre><code>repositories {
+  mavenLocal()()
+}
+</code></pre>
+<h3 id="2使用远程maven-仓库"><a class="markdownIt-Anchor" href="#2使用远程maven-仓库"></a> 2.使用远程maven 仓库：</h3>
+<pre><code>repositories {
+
+    maven {
+        url &quot;http://repo.mycompany.com/maven2&quot;
+    }
+
+    //带认证的库
+    maven {
+        credentials {
+            username 'user'
+            password 'password'
+        }
+        url &quot;http://repo.mycompany.com/maven2&quot;
+    }
+
+}
+</code></pre>
+<h3 id="3使用本地的ivy-仓库"><a class="markdownIt-Anchor" href="#3使用本地的ivy-仓库"></a> 3.使用本地的ivy 仓库：</h3>
+<pre><code>repositories {
+    ivy {
+        // URL can refer to a local directory
+        url &quot;../local-repo&quot;
+    }
+}
+</code></pre>
+<h3 id="4使用远程的ivy-仓库"><a class="markdownIt-Anchor" href="#4使用远程的ivy-仓库"></a> 4.使用远程的ivy 仓库：</h3>
+<pre><code>repositories {
+   ivy {
+        url &quot;http://repo.mycompany.com/repo&quot;
+    }
+}
+</code></pre>
+<h2 id="使用-maven-库"><a class="markdownIt-Anchor" href="#使用-maven-库"></a> 使用 Maven 库</h2>
+<pre><code>经实践，发现直接使用 mavenLocal() 时，gradle 会查找 Maven 配置文件 ${user.home}/.m2/settings.xml 来定位本地 Maven 库的路径，
+如果没有找到该文件，则默认本地库路径为 ${user.home}/.m2/repository。
+</code></pre>
+<h2 id="gradle项目与maven项目相互转化-2"><a class="markdownIt-Anchor" href="#gradle项目与maven项目相互转化-2"></a> gradle项目与maven项目相互转化</h2>
+<ul>
+<li>
+<p>gradle --&gt; maven</p>
+</li>
+<li>
+<p>maven --&gt; gradle</p>
+</li>
+<li>
+<p>先保证本机安装了gradle 2.0以上的版本<br>
+然后在maven根目录下运行<br>
+gradle init --type pom</p>
+</li>
+</ul>
+<h2 id="java项目结构"><a class="markdownIt-Anchor" href="#java项目结构"></a> Java项目结构</h2>
+<p>默认的项目结构如下：</p>
+<pre><code>src/main/java目录包含了项目的源代码。
+src/main/resources目录包含了项目的资源（如属性文件）。
+src/test/java目录包含了测试类。
+src/test/resources目录包含了测试资源。所有我们构建生成的文件都会在build目录下被创建，
+这个目录涵盖了以下的子目录，这些子目录我们会在这篇教程中提到，另外还有一些子目录我们会放在以后讲解。
+classes目录包含编译过的.class文件。
+libs目录包含构建生成的jar或war文件。
+</code></pre>
+<h2 id="java工程中的任务"><a class="markdownIt-Anchor" href="#java工程中的任务"></a> Java工程中的任务</h2>
+<pre><code>assemble任务会编译程序中的源代码，并打包生成Jar文件，这个任务不执行单元测试。
+build任务会执行一个完整的项目构建。
+clean任务会删除构建目录。
+compileJava任务会编译程序中的源代码。
+</code></pre>
+<h2 id="faq"><a class="markdownIt-Anchor" href="#faq"></a> FAQ</h2>
+<p>解决遇到的问题</p>
+<h3 id="q"><a class="markdownIt-Anchor" href="#q"></a> Q.</h3>
+<p>一个工程可以使用多个仓库。怎么寻找dependency呢？</p>
+<h3 id="a"><a class="markdownIt-Anchor" href="#a"></a> A.</h3>
+<pre><code>Gradle是这么做的：按照你在文件中(build.gradle)仓库的顺序寻找所需依赖(如jar文件)，
+如果在某个仓库中找到了，那么将不再其它仓库中寻找。
+</code></pre>
+<h3 id="q-2"><a class="markdownIt-Anchor" href="#q-2"></a> Q.</h3>
+<p>解决Gradle编译时出现： 编码GBK的不可映射字符</p>
+<h3 id="a-2"><a class="markdownIt-Anchor" href="#a-2"></a> A.</h3>
+<pre><code>在build.gradle文件中加入如下内容：
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+</code></pre>
+<hr>
+<h2 id="参考"><a class="markdownIt-Anchor" href="#参考"></a> 参考：</h2>
+<p><a href="https://dongchuan.gitbooks.io/gradle-user-guide-/content/" target="_blank" rel="noopener">https://dongchuan.gitbooks.io/gradle-user-guide-/content/</a><br>
+<a href="https://docs.gradle.org/current/userguide/userguide.html" target="_blank" rel="noopener">https://docs.gradle.org/current/userguide/userguide.html</a></p>
+<h2 id="小结"><a class="markdownIt-Anchor" href="#小结"></a> 小结</h2>
+<ol>
+<li>Gradle非常简洁，项目本身的配置代码非常少。</li>
+<li>Gradle在外部project构建也支持很好，整体构建简单，并且通过公用外部构建脚本，让配置内容尽量没有冗余。</li>
+<li>Gradle很灵活，可以方面的增加和修改构建过程。而Maven却需要开发插件来支持。</li>
+<li>Gradle是基于Groovy的，也就是说配置中可以编写自定义代码，能适应更复杂的场景，能完成更强大的功能，比如说：自动上传、分发、部署等等。</li>
+</ol>
+<p>随着公司业务的发展，软件系统变得日益复杂和庞大，这就要求有更灵活、更高效的构建系统来支撑。现代构建系统Gradle提供了强大的功能、简洁的语法、灵活的配置，能适应各种复杂的构建环境。利用多project构建，让整个系统模块化，管理更高效。</p>
+<h2 id="附录"><a class="markdownIt-Anchor" href="#附录"></a> 附录</h2>
+<h3 id="gradle主配置文件"><a class="markdownIt-Anchor" href="#gradle主配置文件"></a> gradle主配置文件</h3>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://bobit.github.io/posts/21924951.html" title="Gradle使用方法详解" target="_blank" rel="external">https://bobit.github.io/posts/21924951.html</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="/" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="/" target="_blank"><span class="text-dark">Bobit</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Stay hungry Stay foolish。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom="">
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/posts/b88033e6.html" title="Groovy基础"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/posts/5dcde84c.html" title="IDEA使用方法详解"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope="" itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2018 Bobit
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '56f306ee72227aea5242',
+    clientSecret: '643731c8b68edc28e5923dd5388f8c1d3596f2f8',
+    repo: 'bobit.github.io.comments',
+    owner: 'bobit',
+    admin: ['bobit'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+      
+
+
+
+
+
+
+
+</body>
+</html>

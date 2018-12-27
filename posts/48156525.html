@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>高并发高负载类网站中数据库的设计 | Bobit-你好世界</title>
+  <meta name="description" content="高并发高负载类网站中数据库的设计方法总结  关注点之数据库 首先是数据库,这是大多数应用所面临的首个SPOF。尤其是Web2.0的应用，数据库的响应是首先要解决的。 一般来说MySQL是最常用的，可能最初是一个mysql主机，当数据增加到100万以上，那么，MySQL的效能急剧下降。常用的优化措施是M-S（主-从）方式进行同步复制，将查询和操作和分别在不同的服务器上进行操作。我推荐的是M-M-Sl">
+<meta name="keywords" content="高并发,高负载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高并发高负载类网站中数据库的设计">
+<meta property="og:url" content="https://bobit.github.io/posts/48156525.html">
+<meta property="og:site_name" content="Bobit-你好世界">
+<meta property="og:description" content="高并发高负载类网站中数据库的设计方法总结  关注点之数据库 首先是数据库,这是大多数应用所面临的首个SPOF。尤其是Web2.0的应用，数据库的响应是首先要解决的。 一般来说MySQL是最常用的，可能最初是一个mysql主机，当数据增加到100万以上，那么，MySQL的效能急剧下降。常用的优化措施是M-S（主-从）方式进行同步复制，将查询和操作和分别在不同的服务器上进行操作。我推荐的是M-M-Sl">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-21T12:56:51.686Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高并发高负载类网站中数据库的设计">
+<meta name="twitter:description" content="高并发高负载类网站中数据库的设计方法总结  关注点之数据库 首先是数据库,这是大多数应用所面临的首个SPOF。尤其是Web2.0的应用，数据库的响应是首先要解决的。 一般来说MySQL是最常用的，可能最初是一个mysql主机，当数据增加到100万以上，那么，MySQL的效能急剧下降。常用的优化措施是M-S（主-从）方式进行同步复制，将查询和操作和分别在不同的服务器上进行操作。我推荐的是M-M-Sl">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://bobit.github.io/posts/48156525.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="/" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Bobit</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索">
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech="">
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope="" itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope="" itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithms/">Algorithms</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/English/">English</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/">Maven</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Source/">Source</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/Netty/">Netty</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/并发编程/">并发编程</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能优化/">性能优化</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ActiveMQ/">ActiveMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithms/">Algorithms</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anaconda/">Anaconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQ/">MQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/">MongoDB</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/">Netty</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Postman/">Postman</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Robo-3T/">Robo 3T</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Serializable/">Serializable</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/">Spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring5/">Spring5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/car/">car</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/concurrent/">concurrent</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eat/">eat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/互联网/">互联网</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/克隆/">克隆</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/序列化/">序列化</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高并发/">高并发</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高负载/">高负载</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ActiveMQ/" style="font-size: 13px;">ActiveMQ</a> <a href="/tags/Algorithms/" style="font-size: 13px;">Algorithms</a> <a href="/tags/Anaconda/" style="font-size: 13px;">Anaconda</a> <a href="/tags/Gradle/" style="font-size: 13.33px;">Gradle</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/IDEA/" style="font-size: 13px;">IDEA</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/MQ/" style="font-size: 13px;">MQ</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13px;">Netty</a> <a href="/tags/Postman/" style="font-size: 13px;">Postman</a> <a href="/tags/Redis/" style="font-size: 13px;">Redis</a> <a href="/tags/Robo-3T/" style="font-size: 13px;">Robo 3T</a> <a href="/tags/Serializable/" style="font-size: 13px;">Serializable</a> <a href="/tags/Spring/" style="font-size: 13px;">Spring</a> <a href="/tags/Spring5/" style="font-size: 13px;">Spring5</a> <a href="/tags/car/" style="font-size: 13.33px;">car</a> <a href="/tags/concurrent/" style="font-size: 13px;">concurrent</a> <a href="/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/tags/eat/" style="font-size: 13px;">eat</a> <a href="/tags/life/" style="font-size: 14px;">life</a> <a href="/tags/linux/" style="font-size: 13px;">linux</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/python/" style="font-size: 13.67px;">python</a> <a href="/tags/互联网/" style="font-size: 13.33px;">互联网</a> <a href="/tags/克隆/" style="font-size: 13.33px;">克隆</a> <a href="/tags/并发/" style="font-size: 13px;">并发</a> <a href="/tags/序列化/" style="font-size: 13.33px;">序列化</a> <a href="/tags/性能优化/" style="font-size: 13px;">性能优化</a> <a href="/tags/数据库/" style="font-size: 13px;">数据库</a> <a href="/tags/英语/" style="font-size: 13.67px;">英语</a> <a href="/tags/转载/" style="font-size: 13px;">转载</a> <a href="/tags/高并发/" style="font-size: 13.33px;">高并发</a> <a href="/tags/高负载/" style="font-size: 13px;">高负载</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/11/">十一月 2010</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/分布式/">分布式</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/分布式/Netty/">Netty</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/21d654b6.html" class="title">Netty入门</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-12-13T14:29:17.000Z" itemprop="datePublished">2017-12-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/English/">English</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/9253509e.html" class="title">互联网常用名词大全</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:29:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/48156525.html" class="title">高并发高负载类网站中数据库的设计</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:28:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/396258dc.html" class="title">高并发系统的开发注意事项</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:27:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/18c040aa.html" class="title">Java日志框架总结</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:26:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope="" itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#关注点之数据库"><span class="toc-number">1.</span> <span class="toc-text"> 关注点之数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统架构之html静态化"><span class="toc-number">2.</span> <span class="toc-text"> 系统架构之HTML静态化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关注点之缓存-负载均衡-存储"><span class="toc-number">3.</span> <span class="toc-text"> 关注点之缓存、负载均衡、存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统架构之图片服务器分离"><span class="toc-number">4.</span> <span class="toc-text"> 系统架构之图片服务器分离</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统架构之数据库集群和库表散列"><span class="toc-number">5.</span> <span class="toc-text"> 系统架构之数据库集群和库表散列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#系统架构之缓存"><span class="toc-number">6.</span> <span class="toc-text"> 系统架构之缓存</span></a></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-并发编程/高并发高负载类网站中数据库的设计" class="article article-type-post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      高并发高负载类网站中数据库的设计
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/posts/48156525.html" class="article-date">
+	  <time datetime="2017-11-13T14:28:17.000Z" itemprop="datePublished">2017-11-13</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/并发编程/">并发编程</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/高并发/">高并发</a>, <a class="article-tag-link" href="/tags/高负载/">高负载</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/posts/48156525.html#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 4.5k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 16(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>高并发高负载类网站中数据库的设计方法总结</p>
+<h3 id="关注点之数据库"><a class="markdownIt-Anchor" href="#关注点之数据库"></a> 关注点之数据库</h3>
+<p>首先是数据库,这是大多数应用所面临的首个SPOF。尤其是Web2.0的应用，数据库的响应是首先要解决的。<br>
+一般来说MySQL是最常用的，可能最初是一个mysql主机，当数据增加到100万以上，那么，MySQL的效能急剧下降。常用的优化措施是M-S（主-从）方式进行同步复制，将查询和操作和分别在不同的服务器上进行操作。我推荐的是M-M-Slaves方式，2个主Mysql，多个Slaves，需要注意的是，虽然有2个Master，但是同时只有1个是Active，我们可以在一定时候切换。之所以用2个M，是保证M不会又成为系统的SPOF。<br>
+Slaves可以进一步负载均衡，可以结合LVS,从而将select操作适当的平衡到不同的slaves上。<br>
+以上架构可以抗衡到一定量的负载，但是随着用户进一步增加，你的用户表数据超过1千万，这时那个M变成了SPOF。你不能任意扩充Slaves，否则复制同步的开销将直线上升，怎么办？我的方法是表分区，从业务层面上进行分区。最简单的，以用户数据为例。根据一定的切分方式，比如id，切分到不同的数据库集群去。</p>
+<p>全局数据库用于meta数据的查询。缺点是每次查询，会增加一次，比如你要查一个用户nightsailer,你首先要到全局数据库群找到nightsailer对应的cluster id，然后再到指定的cluster找到nightsailer的实际数据。<br>
+每个cluster可以用m-m方式，或者m-m-slaves方式。这是一个可以扩展的结构，随着负载的增加，你可以简单的增加新的mysql cluster进去。</p>
+<p>需要注意的是：<br>
+1、禁用全部auto_increment的字段<br>
+2、id需要采用通用的算法集中分配<br>
+3、要具有比较好的方法来监控mysql主机的负载和服务的运行状态。如果你有30台以上的mysql数据库在跑就明白我的意思了。<br>
+4、不要使用持久性链接（不要用pconnect）,相反，使用sqlrelay这种第三方的数据库链接池，或者干脆自己做，因为php4中mysql的链接池经常出问题。</p>
+<h3 id="系统架构之html静态化"><a class="markdownIt-Anchor" href="#系统架构之html静态化"></a> 系统架构之HTML静态化</h3>
+<p>其实大家都知道，效率最高、消耗最小的就是纯静态化 <a href="http://www.ablanxue.com/shtml/201207/776.shtml%E7%9A%84html%E9%A1%B5%E9%9D%A2%EF%BC%8C%E6%89%80%E4%BB%A5%E6%88%91%E4%BB%AC%E5%B0%BD%E5%8F%AF%E8%83%BD%E4%BD%BF%E6%88%91%E4%BB%AC%E7%9A%84%E7%BD%91%E7%AB%99%E4%B8%8A%E7%9A%84%E9%A1%B5%E9%9D%A2%E9%87%87%E7%94%A8%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2%E6%9D%A5%E5%AE%9E%E7%8E%B0%EF%BC%8C%E8%BF%99%E4%B8%AA%E6%9C%80%E7%AE%80%E5%8D%95%E7%9A%84%E6%96%B9%E6%B3%95%E5%85%B6%E5%AE%9E%E4%B9%9F%E6%98%AF" target="_blank" rel="noopener">http://www.ablanxue.com/shtml/201207/776.shtml的html页面，所以我们尽可能使我们的网站上的页面采用静态页面来实现，这个最简单的方法其实也是</a> 最有效的方法。但是对于大量内容并且频繁更新的网站，我们无法全部手动去挨个实现，于是出现了我们常见的信息发布系统CMS，像我们常访问的各个门户站点 的新闻频道，甚至他们的其他频道，都是通过信息发布系统来管理和实现的，信息发布系统可以实现最简单的信息录入自动生成静态页面，还能具备频道管理、权限 管理、自动抓取等功能，对于一个大型网站来说，拥有一套高效、可管理的CMS是必不可少的。<br>
+　　<br>
+　　除了门户和信息发布类型的网站，对于交互性要求很高的社区类型网站来说，尽可能的静态化也是提高性能的必要手段，将社区内的帖子、文章进行实时的静态化，有更新的时候再重新静态化也是大量使用的策略，像Mop的大杂烩就是使用了这样的策略，网易社区等也是如此。<br>
+　　<br>
+　 　同时，html静态化也是某些缓存策略使用的手段，对于系统中频繁使用数据库查询但是内容更新很小的应用，可以考虑使用html静态化来实现，比如论坛 中论坛的公用设置信息，这些信息目前的主流论坛都可以进行后台管理并且存储再数据库中，这些信息其实大量被前台程序调用，但是更新频率很小，可以考虑将这 部分内容进行后台更新的时候进行静态化，这样避免了大量的数据库访问请求高并发。<br>
+　　<br>
+网站HTML静态化解决方案<br>
+当一个Servlet资源请求到达WEB服务器之后我们会填充指定的JSP页面来响应请求:<br>
+HTTP请求—Web服务器—Servlet–业务逻辑处理–访问数据–填充JSP–响应请求<br>
+HTML静态化之后:<br>
+HTTP请求—Web服务器—Servlet–HTML–响应请求<br>
+静态访求如下</p>
+<p>Servlet:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">public void doGet(HttpServletRequest request, HttpServletResponse response)</span><br><span class="line">​        throws ServletException, IOException &#123;</span><br><span class="line">​    if(request.getParameter(&quot;chapterId&quot;) != null)&#123;</span><br><span class="line">​        String chapterFileName = &quot;bookChapterRead_&quot;+request.getParameter(&quot;chapterId&quot;)+&quot;.html&quot;;</span><br><span class="line">​        String chapterFilePath = getServletContext().getRealPath(&quot;/&quot;) + chapterFileName;</span><br><span class="line">​        File chapterFile = new File(chapterFilePath);</span><br><span class="line">​        if(chapterFile.exists())&#123;response.sendRedirect(chapterFileName);return;&#125;//如果有这个文件就告诉浏览器转向 </span><br><span class="line">​        INovelChapterBiz novelChapterBiz = new NovelChapterBizImpl();</span><br><span class="line">​        NovelChapter novelChapter = novelChapterBiz.searchNovelChapterById(Integer.parseInt(request.getParameter(&quot;chapterId&quot;)));//章节信息 </span><br><span class="line">​        int lastPageId = novelChapterBiz.searchLastCHapterId(novelChapter.getNovelId().getId(), novelChapter.getId());</span><br><span class="line">​        int nextPageId = novelChapterBiz.searchNextChapterId(novelChapter.getNovelId().getId(), novelChapter.getId());</span><br><span class="line">​        request.setAttribute(&quot;novelChapter&quot;, novelChapter);</span><br><span class="line">​        request.setAttribute(&quot;lastPageId&quot;, lastPageId);</span><br><span class="line">​        request.setAttribute(&quot;nextPageId&quot;, nextPageId);</span><br><span class="line">​        new CreateStaticHTMLPage().createStaticHTMLPage(request, response, getServletContext(), </span><br><span class="line">​                chapterFileName, chapterFilePath, &quot;/bookRead.jsp&quot;);</span><br><span class="line">​    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>生成HTML静态页面的类:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">package com.jb.y2t034.thefifth.web.servlet;</span><br><span class="line">import java.io.ByteArrayOutputStream;</span><br><span class="line">import java.io.FileOutputStream;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.OutputStreamWriter;</span><br><span class="line">import java.io.PrintWriter;</span><br><span class="line">import javax.servlet.RequestDispatcher;</span><br><span class="line">import javax.servlet.ServletContext;</span><br><span class="line">import javax.servlet.ServletException;</span><br><span class="line">import javax.servlet.ServletOutputStream;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import javax.servlet.http.HttpServletResponseWrapper;</span><br><span class="line">/**</span><br><span class="line">* 创建HTML静态页面</span><br><span class="line">* 功能：创建HTML静态页面</span><br><span class="line">* 时间：2009年1011日</span><br><span class="line">* 地点：home</span><br><span class="line">* @author mavk</span><br><span class="line">  *</span><br><span class="line">  */</span><br><span class="line">  public class CreateStaticHTMLPage &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 生成静态HTML页面的方法</span><br><span class="line">     * @param request 请求对象</span><br><span class="line">     * @param response 响应对象</span><br><span class="line">     * @param servletContext Servlet上下文</span><br><span class="line">     * @param fileName 文件名称</span><br><span class="line">     * @param fileFullPath 文件完整路径</span><br><span class="line">     * @param jspPath 需要生成静态文件的JSP路径(相对即可)</span><br><span class="line">     * @throws IOException</span><br><span class="line">     * @throws ServletException</span><br><span class="line">        */</span><br><span class="line"></span><br><span class="line">      public void createStaticHTMLPage(HttpServletRequest request, HttpServletResponse response,ServletContext servletContext,String fileName,String fileFullPath,String jspPath) throws ServletException, IOException&#123;</span><br><span class="line">      </span><br><span class="line">        response.setContentType(&quot;text/html;charset=gb2312&quot;);//设置HTML结果流编码(即HTML文件编码) </span><br><span class="line">        RequestDispatcher rd = servletContext.getRequestDispatcher(jspPath);//得到JSP资源 </span><br><span class="line">        final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();//用于从ServletOutputStream中接收资源 </span><br><span class="line">        final ServletOutputStream servletOuputStream = new ServletOutputStream()&#123;//用于从HttpServletResponse中接收资源 </span><br><span class="line">            public void write(byte[] b, int off,int len)&#123;</span><br><span class="line">                byteArrayOutputStream.write(b, off, len);</span><br><span class="line">            &#125;</span><br><span class="line">            public void write(int b)&#123;</span><br><span class="line">                byteArrayOutputStream.write(b);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        final PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(byteArrayOutputStream));//把转换字节流转换成字符流 </span><br><span class="line">        HttpServletResponse httpServletResponse = new HttpServletResponseWrapper(response)&#123;//用于从response获取结果流资源(重写了两个方法) </span><br><span class="line">            public ServletOutputStream getOutputStream()&#123;</span><br><span class="line">                return servletOuputStream;</span><br><span class="line">            &#125;</span><br><span class="line">            public PrintWriter getWriter()&#123;</span><br><span class="line">                return printWriter;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        rd.include(request, httpServletResponse);//发送结果流 </span><br><span class="line">        printWriter.flush();//刷新缓冲区，把缓冲区的数据输出 </span><br><span class="line">        FileOutputStream fileOutputStream = new FileOutputStream(fileFullPath);</span><br><span class="line">        byteArrayOutputStream.writeTo(fileOutputStream);//把byteArrayOuputStream中的资源全部写入到fileOuputStream中 </span><br><span class="line">        fileOutputStream.close();//关闭输出流，并释放相关资源 </span><br><span class="line">        response.sendRedirect(fileName);//发送指定文件流到客户端 </span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="关注点之缓存-负载均衡-存储"><a class="markdownIt-Anchor" href="#关注点之缓存-负载均衡-存储"></a> 关注点之缓存、负载均衡、存储</h3>
+<p>缓存是另一个大问题，我一般用memcached来做缓存集群，一般来说部署10台左右就差不多（10g内存池）。需要注意一点，千万不能用使用<br>
+swap，最好关闭linux的swap。</p>
+<p>负载均衡/加速<br>
+可能上面说缓存的时候，有人第一想的是页面静态化，所谓的静态html，我认为这是常识，不属于要点了。页面的静态化随之带来的是静态服务的<br>
+负载均衡和加速。我认为Lighttped+Squid是最好的方式了。<br>
+LVS &lt;-------&gt;lighttped====&gt;squid(s) ====lighttpd</p>
+<p>上面是我经常用的。注意，我没有用apache，除非特定的需求，否则我不部署apache，因为我一般用php-fastcgi配合lighttpd,<br>
+性能比apache+mod_php要强很多。</p>
+<p>squid的使用可以解决文件的同步等等问题，但是需要注意，你要很好的监控缓存的命中率，尽可能的提高的90%以上。<br>
+squid和lighttped也有很多的话题要讨论，这里不赘述。</p>
+<p>存储<br>
+存储也是一个大问题，一种是小文件的存储，比如图片这类。另一种是大文件的存储，比如搜索引擎的索引，一般单文件都超过2g以上。<br>
+小文件的存储最简单的方法是结合lighttpd来进行分布。或者干脆使用Redhat的GFS，优点是应用透明，缺点是费用较高。我是指<br>
+你购买盘阵的问题。我的项目中，存储量是2-10Tb，我采用了分布式存储。这里要解决文件的复制和冗余。<br>
+这样每个文件有不同的冗余，这方面可以参考google的gfs的论文。<br>
+大文件的存储，可以参考nutch的方案，现在已经独立为hadoop子项目。(你可以google it)</p>
+<p>其他：<br>
+此外，passport等也是考虑的，不过都属于比较简单的了。</p>
+<h3 id="系统架构之图片服务器分离"><a class="markdownIt-Anchor" href="#系统架构之图片服务器分离"></a> 系统架构之图片服务器分离</h3>
+<p>大家知道，对于Web 服务器来说，不管是Apache、IIS还是其他容器，图片是最消耗资源的，于是我们有必要将图片与页面进行分离，这是基本上大型网站都会采用的策略，他 们都有独立的图片服务器，甚至很多台图片服务器。这样的架构可以降低提供页面访问请求的服务器系统压力，并且可以保证系统不会因为图片问题而崩溃，在应用 服务器和图片服务器上，可以进行不同的配置优化，比如apache在配置ContentType的时候可以尽量少支持，尽可能少的LoadModule， 保证更高的系统消耗和执行效率。</p>
+<p>利用Apache实现图片服务器的分离<br>
+缘由：<br>
+起步阶段的应用，都可能部署在一台服务器上（费用上的原因）<br>
+第一个优先分离的，肯定是数据库和应用服务器。<br>
+第二个分离的，会是什么呢？各有各的考虑，我所在的项目组重点考虑的节约带宽，服务器性能再好，带宽再高，并发来了，也容易撑不住。因此，我这篇文章的重点在这里。这里重点是介绍实践，不一定符合所有情况，供看者参考吧，<br>
+环境介绍：<br>
+WEB应用服务器：4CPU双核2G, 内存4G<br>
+部署：Win2003/Apache Http Server 2.1/Tomcat6<br>
+数据库服务器：4CPU双核2G, 内存4G<br>
+部署：Win2003/MSSQL2000<br>
+步骤：<br>
+步骤一：增加2台配置为：2CPU双核2G，内存2G普通服务器，做资源服务器<br>
+部署：Tomcat6，跑了一个图片上传的简单应用，（记得指定web.xml的<distributable>），并指定域名为res1.***.com,res2.***.com，采用ajp协议<br>
+步骤二：修改Apache httpd.conf配置<br>
+原来应用的文件上传功能网址为：<br>
+1、/fileupload.html<br>
+2、/otherupload.html<br>
+在httpd.conf中增加如下配置</distributable></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt; </span><br><span class="line">  ServerAdmin webmaster@***.com </span><br><span class="line">  ProxyPass /fileupload.html balancer://rescluster/fileupload lbmethod=byrequests stickysession=JSESSIONID nofailover=Off timeout=5 maxattempts=3    </span><br><span class="line">  ProxyPass /otherupload.html balancer://rescluster/otherupload.html lbmethod=byrequests stickysession=JSESSIONID nofailover=Off timeout=5 maxattempts=3    </span><br><span class="line">  #&lt;!--负载均衡--&gt; </span><br><span class="line">  &lt;Proxy balancer://rescluster/&gt; </span><br><span class="line">​    BalancerMember ajp://res1.***.com:8009 smax=5 max=500 ttl=120 retry=300 loadfactor=100 route=tomcat1 </span><br><span class="line">​    BalancerMember ajp://res2.***.com:8009 smax=5 max=500 ttl=120 retry=300 loadfactor=100 route=tomcat2 </span><br><span class="line">  &lt;/Proxy&gt; </span><br><span class="line"></span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+<p>步骤三，修改业务逻辑：<br>
+所有上传文件在数据库中均采用全url的方式保存，例如产品图片路径存成：<a href="http://res1" target="_blank" rel="noopener">http://res1</a>.***.com/upload/20090101/product120302005.jpg</p>
+<p>现在，你可以高枕无忧了，带宽不够时，增加个几十台图片服务器，只需要稍微修改一下apache的配置文件，即可。</p>
+<h3 id="系统架构之数据库集群和库表散列"><a class="markdownIt-Anchor" href="#系统架构之数据库集群和库表散列"></a> 系统架构之数据库集群和库表散列</h3>
+<p>大型网站都有复杂的应用，这些应用必须使用数据库，那么在面对大量访问的时候，数据库的瓶颈很快就能显现出来，这时一台数据库将很快无法满足应用，于是我们需要使用数据库集群或者库表散列。<br>
+　　<br>
+　　在数据库集群方面，很多数据库都有自己的解决方案，Oracle、Sybase等都有很好的方案，常用的MySQL提供的Master/Slave也是类似的方案，您使用了什么样的DB，就参考相应的解决方案来实施即可。<br>
+　　<br>
+　 　上面提到的数据库集群由于在架构、成本、扩张性方面都会受到所采用DB类型的限制，于是我们需要从应用程序的角度来考虑改善系统架构，库表散列是常用并 且最有效的解决方案。我们在应用程序中安装业务和应用或者功能模块将数据库进行分离，不同的模块对应不同的数据库或者表，再按照一定的策略对某个页面或者 功能进行更小的数据库散列，比如用户表，按照用户ID进行表散列，这样就能够低成本的提升系统的性能并且有很好的扩展性。sohu的论坛就是采用了这样的 架构，将论坛的用户、设置、帖子等信息进行数据库分离，然后对帖子、用户按照板块和ID进行散列数据库和表，最终可以在配置文件中进行简单的配置便能让系 统随时增加一台低成本的数据库进来补充系统性能。</p>
+<p>集群软件的分类：<br>
+一般来讲，集群软件根据侧重的方向和试图解决的问题，分为三大类：高性能集群（High performance cluster，HPC）、负载均衡集群（Load balance cluster， LBC），高可用性集群（High availability cluster，HAC）。<br>
+高性能集群（High performance cluster，HPC），它是利用一个集群中的多台机器共同完成同一件任务，使得完成任务的速度和可靠性都远远高于单机运行的效果。弥补了单机性能上的不足。该集群在天气预报、环境监控等数据量大，计算复杂的环境中应用比较多；<br>
+负载均衡集群（Load balance cluster， LBC），它是利用一个集群中的多台单机，完成许多并行的小的工作。一般情况下，如果一个应用使用的人多了，那么用户请求的响应时间就会增大，机器的性能也会受到影响，如果使用负载均衡集群，那么集群中任意一台机器都能响应用户的请求，这样集群就会在用户发出服务请求之后，选择当时负载最小，能够提供最好的服务的这台机器来接受请求并相应，这样就可用用集群来增加系统的可用性和稳定性。这类集群在网站中使用较多；<br>
+高可用性集群（High availability cluster，HAC），它是利用集群中系统 的冗余，当系统中某台机器发生损坏的时候，其他后备的机器可以迅速的接替它来启动服务，等待故障机的维修和返回。最大限度的保证集群中服务的可用性。这类系统一般在银行，电信服务这类对系统可靠性有高的要求的领域有着广泛的应用。<br>
+2 数据库集群的现状<br>
+数据库集群是将计算机集群技术引入到数据库中来实现的，尽管各厂商宣称自己的架构如何的完美，但是始终不能改变Oracle当先，大家追逐的事实，在集群的解决方案上Oracle RAC还是领先于包括微软在内的其它数据库厂商，它能满足客户高可用性、高性能、数据库负载均衡和方便扩展的需求。<br>
+Oracle’s Real Application Cluster (RAC)<br>
+Microsoft SQL Cluster Server (MSCS)<br>
+IBM’s DB2 UDB High Availability Cluster(UDB)<br>
+Sybase ASE High Availability Cluster (ASE)<br>
+MySQL High Availability Cluster (MySQL CS)<br>
+基于IO的第三方HA(高可用性)集群<br>
+当前主要的数据库集群技术有以上六大类，有数据库厂商自己开发的；也有第三方的集群公司开发的；还有数据库厂商与第三方集群公司合作开发的，各类集群实现的功能及架构也不尽相同。<br>
+RAC（Real Application Cluster，真正应用集群）是Oracle9i数据库中采用的一项新技术，也是Oracle数据库支持网格计算环境的核心技术。它的出现解决了传统数据库应用中面临的一个重要问题：高性能、高可伸缩性与低价格之间的矛盾。在很长一段时间里，甲骨文都以其实时应用集群技术(Real Application Cluster，RAC)统治着集群数据库市场</p>
+<h3 id="系统架构之缓存"><a class="markdownIt-Anchor" href="#系统架构之缓存"></a> 系统架构之缓存</h3>
+<p>缓存一词搞技术的都接触过，很多地方用到缓存。网站架构和网站开发中的缓存也是非常重要。这里先讲述最基本的两种缓存。高级和分布式的缓存在后面讲述。<br>
+架构方面的缓存，对Apache比较熟悉的人都能知道Apache提供了自己的缓存模块，也可以使用外加的Squid模块进行缓存，这两种方式均可以有效的提高Apache的访问响应能力。<br>
+网站程序开发方面的缓存，Linux上提供的Memory Cache是常用的缓存接口，可以在web开发中使用，比如用Java开发的时候就可以调用MemoryCache对一些数据进行缓存和通讯共享，一些大 型社区使用了这样的架构。另外，在使用web语言开发的时候，各种语言基本都有自己的缓存模块和方法，PHP有Pear的Cache模块，Java就更多了，.net不是很熟悉，相信也肯定有。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://bobit.github.io/posts/48156525.html" title="高并发高负载类网站中数据库的设计" target="_blank" rel="external">https://bobit.github.io/posts/48156525.html</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="/" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="/" target="_blank"><span class="text-dark">Bobit</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Stay hungry Stay foolish。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom="">
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/posts/9253509e.html" title="互联网常用名词大全"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/posts/396258dc.html" title="高并发系统的开发注意事项"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope="" itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2018 Bobit
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '56f306ee72227aea5242',
+    clientSecret: '643731c8b68edc28e5923dd5388f8c1d3596f2f8',
+    repo: 'bobit.github.io.comments',
+    owner: 'bobit',
+    admin: ['bobit'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+      
+
+
+
+
+
+
+
+</body>
+</html>

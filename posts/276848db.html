@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>Redis学习总结 | Bobit-你好世界</title>
+  <meta name="description" content="简介 Redis 是一款依据BSD开源协议发行的高性能Key-Value存储系统（cache and store）。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈希(hashes), 列表(list), 集合(sets) 和 有序集合(sorted sets)等类型。这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis学习总结">
+<meta property="og:url" content="https://bobit.github.io/posts/276848db.html">
+<meta property="og:site_name" content="Bobit-你好世界">
+<meta property="og:description" content="简介 Redis 是一款依据BSD开源协议发行的高性能Key-Value存储系统（cache and store）。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈希(hashes), 列表(list), 集合(sets) 和 有序集合(sorted sets)等类型。这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-21T12:55:42.349Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis学习总结">
+<meta name="twitter:description" content="简介 Redis 是一款依据BSD开源协议发行的高性能Key-Value存储系统（cache and store）。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈希(hashes), 列表(list), 集合(sets) 和 有序集合(sorted sets)等类型。这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://bobit.github.io/posts/276848db.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="/" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Bobit</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索">
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech="">
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope="" itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope="" itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Algorithms/">Algorithms</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/English/">English</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/">Maven</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python/">Python</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Source/">Source</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/">分布式</a><span class="category-list-count">4</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/分布式/Netty/">Netty</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/并发编程/">并发编程</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/性能优化/">性能优化</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ActiveMQ/">ActiveMQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Algorithms/">Algorithms</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Anaconda/">Anaconda</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Gradle/">Gradle</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/IDEA/">IDEA</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java/">Java</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MQ/">MQ</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/">MongoDB</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/">Netty</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Postman/">Postman</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/">Redis</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Robo-3T/">Robo 3T</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Serializable/">Serializable</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring/">Spring</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Spring5/">Spring5</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/car/">car</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/concurrent/">concurrent</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eat/">eat</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/life/">life</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/">python</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/互联网/">互联网</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/克隆/">克隆</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/并发/">并发</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/序列化/">序列化</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能优化/">性能优化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/数据库/">数据库</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/英语/">英语</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/转载/">转载</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高并发/">高并发</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/高负载/">高负载</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ActiveMQ/" style="font-size: 13px;">ActiveMQ</a> <a href="/tags/Algorithms/" style="font-size: 13px;">Algorithms</a> <a href="/tags/Anaconda/" style="font-size: 13px;">Anaconda</a> <a href="/tags/Gradle/" style="font-size: 13.33px;">Gradle</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/IDEA/" style="font-size: 13px;">IDEA</a> <a href="/tags/Java/" style="font-size: 13.33px;">Java</a> <a href="/tags/MQ/" style="font-size: 13px;">MQ</a> <a href="/tags/MongoDB/" style="font-size: 13px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13px;">Netty</a> <a href="/tags/Postman/" style="font-size: 13px;">Postman</a> <a href="/tags/Redis/" style="font-size: 13px;">Redis</a> <a href="/tags/Robo-3T/" style="font-size: 13px;">Robo 3T</a> <a href="/tags/Serializable/" style="font-size: 13px;">Serializable</a> <a href="/tags/Spring/" style="font-size: 13px;">Spring</a> <a href="/tags/Spring5/" style="font-size: 13px;">Spring5</a> <a href="/tags/car/" style="font-size: 13.33px;">car</a> <a href="/tags/concurrent/" style="font-size: 13px;">concurrent</a> <a href="/tags/docker/" style="font-size: 13.33px;">docker</a> <a href="/tags/eat/" style="font-size: 13px;">eat</a> <a href="/tags/life/" style="font-size: 14px;">life</a> <a href="/tags/linux/" style="font-size: 13px;">linux</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/python/" style="font-size: 13.67px;">python</a> <a href="/tags/互联网/" style="font-size: 13.33px;">互联网</a> <a href="/tags/克隆/" style="font-size: 13.33px;">克隆</a> <a href="/tags/并发/" style="font-size: 13px;">并发</a> <a href="/tags/序列化/" style="font-size: 13.33px;">序列化</a> <a href="/tags/性能优化/" style="font-size: 13px;">性能优化</a> <a href="/tags/数据库/" style="font-size: 13px;">数据库</a> <a href="/tags/英语/" style="font-size: 13.67px;">英语</a> <a href="/tags/转载/" style="font-size: 13px;">转载</a> <a href="/tags/高并发/" style="font-size: 13.33px;">高并发</a> <a href="/tags/高负载/" style="font-size: 13px;">高负载</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/11/">十一月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/10/">十月 2014</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2010/11/">十一月 2010</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/分布式/">分布式</a><i class="icon icon-angle-right"></i><a class="category-link" href="/categories/分布式/Netty/">Netty</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/21d654b6.html" class="title">Netty入门</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-12-13T14:29:17.000Z" itemprop="datePublished">2017-12-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/English/">English</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/9253509e.html" class="title">互联网常用名词大全</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:29:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/48156525.html" class="title">高并发高负载类网站中数据库的设计</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:28:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/396258dc.html" class="title">高并发系统的开发注意事项</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:27:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/并发编程/">并发编程</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/18c040aa.html" class="title">Java日志框架总结</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2017-11-13T14:26:17.000Z" itemprop="datePublished">2017-11-13</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope="" itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text"> 简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主要特点"><span class="toc-number">2.</span> <span class="toc-text"> 主要特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis-优势"><span class="toc-number">3.</span> <span class="toc-text"> Redis 优势</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装redis"><span class="toc-number">4.</span> <span class="toc-text"> 安装Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端"><span class="toc-number">5.</span> <span class="toc-text"> 客户端</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#启动redis"><span class="toc-number">6.</span> <span class="toc-text"> 启动Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试使用"><span class="toc-number">7.</span> <span class="toc-text"> 测试使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#java开发包jedis"><span class="toc-number">8.</span> <span class="toc-text"> Java开发包Jedis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作命令总结"><span class="toc-number">9.</span> <span class="toc-text"> 操作命令总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#key-pattern-查询相应的key"><span class="toc-number">9.1.</span> <span class="toc-text"> key pattern 查询相应的key</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串类型的操作"><span class="toc-number">9.2.</span> <span class="toc-text"> 字符串类型的操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#链表操作"><span class="toc-number">9.3.</span> <span class="toc-text"> 链表操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hashes类型及操作"><span class="toc-number">9.4.</span> <span class="toc-text"> hashes类型及操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集合结构操作"><span class="toc-number">9.5.</span> <span class="toc-text"> 集合结构操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#有序集合"><span class="toc-number">9.6.</span> <span class="toc-text"> 有序集合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#服务器相关命令"><span class="toc-number">9.7.</span> <span class="toc-text"> 服务器相关命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常用命令"><span class="toc-number">9.8.</span> <span class="toc-text"> 常用命令</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-分布式/Redis学习总结" class="article article-type-post" itemscope="" itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Redis学习总结
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/posts/276848db.html" class="article-date">
+	  <time datetime="2016-12-13T14:09:17.000Z" itemprop="datePublished">2016-12-13</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/分布式/">分布式</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Redis/">Redis</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/posts/276848db.html#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3.6k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 14(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="简介"><a class="markdownIt-Anchor" href="#简介"></a> 简介</h2>
+<p>Redis 是一款依据BSD开源协议发行的高性能Key-Value存储系统（cache and store）。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈希(hashes), 列表(list), 集合(sets) 和 有序集合(sorted sets)等类型。这些数据类型都支持push/pop、add/remove及取交集并集和差集及更丰富的操作，而且这些操作都是原子性的。在此基础上，redis支持各种不同方式的排序。与memcached一样，为了保证效率，数据都是缓存在内存中。区别的是redis会周期性的把更新的数据写入磁盘或者把修改操作写入追加的记录文件，并且在此基础上实现了master-slave。Redis并用于构建高性能，可扩展的Web应用程序的完美解决方案。</p>
+<h2 id="主要特点"><a class="markdownIt-Anchor" href="#主要特点"></a> 主要特点</h2>
+<p>Redis从它的许多竞争继承来的三个主要特点：<br>
+Redis数据库完全在内存中，使用磁盘仅用于持久性。<br>
+相比许多键值数据存储，Redis拥有一套较为丰富的数据类型。<br>
+Redis可以将数据复制到任意数量的从服务器。</p>
+<h2 id="redis-优势"><a class="markdownIt-Anchor" href="#redis-优势"></a> Redis 优势</h2>
+<p>异常快速：Redis的速度非常快，每秒能执行约11万集合，每秒约81000+条记录。<br>
+支持丰富的数据类型：Redis支持最大多数开发人员已经知道像列表，集合，有序集合，散列数据类型。这使得它非常容易解决各种各样的问题，因为我们知道哪些问题是可以处理通过它的数据类型更好。<br>
+操作都是原子性：所有Redis操作是原子的，这保证了如果两个客户端同时访问的Redis服务器将获得更新后的值。<br>
+多功能实用工具：Redis是一个多实用的工具，可以在多个用例如缓存，消息，队列使用(Redis原生支持发布/订阅)，任何短暂的数据，应用程序，如Web应用程序会话，网页命中计数等。</p>
+<h2 id="安装redis"><a class="markdownIt-Anchor" href="#安装redis"></a> 安装Redis</h2>
+<p>官方网站：<a href="http://redis.io/" target="_blank" rel="noopener">http://redis.io/</a><br>
+官方下载：<a href="http://redis.io/download" target="_blank" rel="noopener">http://redis.io/download</a> 可以根据需要下载不同版本<br>
+windows版：<a href="https://github.com/mythz/redis-windows" target="_blank" rel="noopener">https://github.com/mythz/redis-windows</a></p>
+<p>Windows 64位操作系统<br>
+Redis 安装包<br>
+下载完成后 可以右键解压到 某个硬盘下 比如D:\Redis\redis-2.6。<br>
+在D:\Redis\redis-2.6\bin\release下 有两个zip包 一个32位一个64位。<br>
+根据自己windows的位数 解压到D:\Redis\redis-2.6 根目录下。</p>
+<p>文件介绍：<br>
+redis-benchmark.exe         #基准测试<br>
+redis-check-aof.exe         # aof<br>
+redischeck-dump.exe        # dump<br>
+redis-cli.exe               # 客户端<br>
+redis-server.exe            # 服务器<br>
+redis.windows.conf          # 配置文件</p>
+<h2 id="客户端"><a class="markdownIt-Anchor" href="#客户端"></a> 客户端</h2>
+<p>redis-desktop-manager-0.8.3.3850.exe<br>
+Windows下Redis的安装使用</p>
+<h2 id="启动redis"><a class="markdownIt-Anchor" href="#启动redis"></a> 启动Redis</h2>
+<p>进入redis目录后 开启服务  （注意加上redis.conf）<br>
+redis-server.exe redis.windows.conf<br>
+这个窗口要保持开启  关闭时redis服务会自动关闭<br>
+redis会自动保存数据到硬盘 所以图中是我第二次开启时 多了一个 DB loaded from disk</p>
+<h2 id="测试使用"><a class="markdownIt-Anchor" href="#测试使用"></a> 测试使用</h2>
+<p>另外开启一个命令行窗口 进入redis目录下 （注意修改自己的ip）<br>
+redis-cli.exe（默认为127.0.0.1:6379）<br>
+redis-cli.exe -h 192.168.10.61 -p 6379<br>
+redis-cli.exe -h 192.168.80.72 -p 6379</p>
+<p>如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; set name zhangsan</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get name</span><br><span class="line">&quot;zhangsan&quot;</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+<p>将Redis设为windows启动项<br>
+win7下安装完redis之后，每次开机都得用cmd命令行启动redis，所以就想办法实现开机自启动redis.<br>
+每次打开命令行启动Redis会很麻烦，把Redis设为windows启动项就不用每次都入命令行了<br>
+一、把启动命令写入bat<br>
+在redis的目录下新建一个start.bat文件内容为<br>
+E:\DevTools\redis64\redis-server.exe E:\DevTools\redis64\redis.windows.conf<br>
+二、利用vb脚本调用bat<br>
+再新建一个文件redis_run.vbs内容为<br>
+CreateObject(“WScript.Shell”).Run “cmd /c E:\DevTools\redis64\start.bat”,0<br>
+三、设置开机自启动<br>
+cmd =》 regedit 打开注册表<br>
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run<br>
+新建一个字符串值，<br>
+数值名称：startRedis<br>
+数值数据：E:\DevTools\redis64\start.vbs</p>
+<h2 id="java开发包jedis"><a class="markdownIt-Anchor" href="#java开发包jedis"></a> Java开发包Jedis</h2>
+<h2 id="操作命令总结"><a class="markdownIt-Anchor" href="#操作命令总结"></a> 操作命令总结</h2>
+<p>这篇文章主要介绍了Redis操作命令总结,本文讲解了key pattern 查询相应的key、字符串类型的操作、链表操作、hashes类型及操作、集合结构操作、有序集合、服务器相关命令等内容,需要的朋友可以参考下</p>
+<h3 id="key-pattern-查询相应的key"><a class="markdownIt-Anchor" href="#key-pattern-查询相应的key"></a> key pattern 查询相应的key</h3>
+<p>（1）keys *：redis允许模糊查询key　　有3个通配符  *、?、[]<br>
+（2）randomkey：返回随机key<br>
+（3）type key：返回key存储的类型<br>
+（4）exists key：判断某个key是否存在（1:存在，0：不存在）<br>
+（5）del key：删除key<br>
+（6）rename key newkey：改名<br>
+（7）renamenx key newkey：如果newkey不存在则修改成功<br>
+（8）move key 1：将key移动到1数据库<br>
+（9）ttl key：查询key的生命周期（秒）<br>
+（10）expire key 整数值：设置key的生命周期以秒为单位<br>
+（11）pexpire key 整数值：设置key的生命周期以毫秒为单位<br>
+（12）pttl key：查询key 的生命周期（毫秒）<br>
+（13）perisist key：把指定key设置为永久有效</p>
+<h3 id="字符串类型的操作"><a class="markdownIt-Anchor" href="#字符串类型的操作"></a> 字符串类型的操作</h3>
+<p>（1）set key value [ex 秒数] [px 毫秒数] [nx/xx]<br>
+如果ex和px同时写，则以后面的有效期为准<br>
+nx：如果key不存在则建立<br>
+xx：如果key存在则修改其值<br>
+（2）get key：取值<br>
+（3）mset key1 value1 key2 value2 一次设置多个值<br>
+（4）mget key1 key2 ：一次获取多个值<br>
+（5）setrange key offset value：把字符串的offset偏移字节改成value<br>
+如果偏移量 &gt; 字符串长度，该字符自动补0x00<br>
+（6）append key value ：把value追加到key 的原值上<br>
+（7）getrange key start stop：获取字符串中[start, stop]范围的值<br>
+对于字符串的下标，左数从0开始，右数从-1开始<br>
+注意：当start&gt;length，则返回空字符串<br>
+当stop&gt;=length，则截取至字符串尾<br>
+如果start所处位置在stop右边，则返回空字符串<br>
+（8）getset key nrevalue：获取并返回旧值，在设置新值<br>
+（9）incr key：自增，返回新值，如果incr一个不是int的value则返回错误，incr一个不存在的key，则设置key为1<br>
+（10）incrby key 2：跳2自增<br>
+（11）incrbyfloat by 0.7： 自增浮点数<br>
+（12）setbit key offset value：设置offset对应二进制上的值，返回该位上的旧值<br>
+注意：如果offset过大，则会在中间填充0<br>
+offset最大到多少<br>
+2^32-1，即可推出最大的字符串为512M<br>
+（13）bitop operation destkey key1 [key2…]    对key1 key2做opecation并将结果保存在destkey上<br>
+opecation可以是AND OR NOT XOR<br>
+（14）strlen key：取指定key的value值的长度<br>
+（15）setex key time value：设置key对应的值value，并设置有效期为time秒</p>
+<h3 id="链表操作"><a class="markdownIt-Anchor" href="#链表操作"></a> 链表操作</h3>
+<p>Redis的list类型其实就是一个每个子元素都是string类型的双向链表，链表的最大长度是2^32。list既可以用做栈，也可以用做队列。<br>
+list的pop操作还有阻塞版本，主要是为了避免轮询<br>
+（1）lpush key value：把值插入到链表头部<br>
+（2）rpush key value：把值插入到链表尾部<br>
+（3）lpop key ：返回并删除链表头部元素<br>
+（4）rpop key： 返回并删除链表尾部元素<br>
+（5）lrange key start stop：返回链表中[start, stop]中的元素<br>
+（6）lrem key count value：从链表中删除value值，删除count的绝对值个value后结束<br>
+count &gt; 0 从表头删除　　count &lt; 0 从表尾删除　　count=0 全部删除<br>
+（7）ltrim key start stop：剪切key对应的链接，切[start, stop]一段并把改制重新赋给key<br>
+（8）lindex key index：返回index索引上的值<br>
+（9）llen key：计算链表的元素个数<br>
+（10）linsert key after|before search value：在key 链表中寻找search，并在search值之前|之后插入value<br>
+（11）rpoplpush source dest：把source 的末尾拿出，放到dest头部，并返回单元值</p>
+<p>应用场景： task + bak 双链表完成安全队列<br>
+业务逻辑： rpoplpush task bak<br>
+接收返回值并做业务处理</p>
+<p>如果成功则rpop bak清除任务，如果不成功，下次从bak表取任务<br>
+（12）brpop，blpop key timeout：等待弹出key的尾/头元素<br>
+timeout为等待超时时间，如果timeout为0则一直等待下去<br>
+应用场景：长轮询ajax，在线聊天时能用到</p>
+<h3 id="hashes类型及操作"><a class="markdownIt-Anchor" href="#hashes类型及操作"></a> hashes类型及操作</h3>
+<p>Redis hash 是一个string类型的field和value的映射表，它的添加、删除操作都是O(1)（平均）。hash特别适用于存储对象，将一个对象存储在hash类型中会占用更少的内存，并且可以方便的存取整个对象。</p>
+<p>配置： hash_max_zipmap_entries 64 #配置字段最多64个<br>
+hash_max_zipmap_value 512 #配置value最大为512字节<br>
+（1）hset myhash field value：设置myhash的field为value<br>
+（2）hsetnx myhash field value：不存在的情况下设置myhash的field为value<br>
+（3）hmset myhash field1 value1 field2 value2：同时设置多个field<br>
+（4）hget myhash field：获取指定的hash field<br>
+（5）hmget myhash field1 field2：一次获取多个field<br>
+（6）hincrby myhash field 5：指定的hash field加上给定的值<br>
+（7）hexists myhash field：测试指定的field是否存在<br>
+（8）hlen myhash：返回hash的field数量<br>
+（9）hdel myhash field：删除指定的field<br>
+（10）hkeys myhash：返回hash所有的field<br>
+（11）hvals myhash：返回hash所有的value<br>
+（12）hgetall myhash：获取某个hash中全部的field及value</p>
+<h3 id="集合结构操作"><a class="markdownIt-Anchor" href="#集合结构操作"></a> 集合结构操作</h3>
+<p>特点：无序性、确定性、唯一性<br>
+（1）sadd key value1 value2：往集合里面添加元素<br>
+（2）smembers key：获取集合所有的元素<br>
+（3）srem key value：删除集合某个元素<br>
+（4）spop key：返回并删除集合中1个随机元素（可以坐抽奖，不会重复抽到某人）<br>
+（5）srandmember key：随机取一个元素<br>
+（6）sismember key value：判断集合是否有某个值<br>
+（7）scard key：返回集合元素的个数<br>
+（8）smove source dest value：把source的value移动到dest集合中<br>
+（9）sinter key1 key2 key3：求key1 key2 key3的交集<br>
+（10）sunion key1 key2：求key1 key2 的并集<br>
+（11）sdiff key1 key2：求key1 key2的差集<br>
+（12）sinterstore res key1 key2：求key1 key2的交集并存在res里</p>
+<h3 id="有序集合"><a class="markdownIt-Anchor" href="#有序集合"></a> 有序集合</h3>
+<p>概念：它是在set的基础上增加了一个顺序属性，这一属性在添加修改元素的时候可以指定，每次指定后，zset会自动按新的值调整顺序。可以理解为有两列的mysql表，一列存储value，一列存储顺序，操作中key理解为zset的名字。</p>
+<p>和set一样sorted，sets也是string类型元素的集合，不同的是每个元素都会关联一个double型的score。sorted set的实现是skip list和hash table的混合体。</p>
+<p>当元素被添加到集合中时，一个元素到score的映射被添加到hash table中，所以给定一个元素获取score的开销是O(1)。另一个score到元素的映射被添加的skip list，并按照score排序，所以就可以有序地获取集合中的元素。添加、删除操作开销都是O(logN)和skip list的开销一致，redis的skip list 实现是双向链表，这样就可以逆序从尾部去元素。sorted set最经常使用方式应该就是作为索引来使用，我们可以把要排序的字段作为score存储，对象的ID当元素存储。<br>
+（1）zadd key score1 value1：添加元素<br>
+（2）zrange key start stop [withscore]：把集合排序后,返回名次[start,stop]的元素  默认是升续排列  withscores 是把score也打印出来<br>
+（3）zrank key member：查询member的排名（升序0名开始）<br>
+（4）zrangebyscore key min max [withscores] limit offset N：集合（升序）排序后取score在[min, max]内的元素，并跳过offset个，取出N个<br>
+（5）zrevrank key member：查询member排名（降序 0名开始）<br>
+（6）zremrangebyscore key min max：按照score来删除元素，删除score在[min, max]之间<br>
+（7）zrem key value1 value2：删除集合中的元素<br>
+（8）zremrangebyrank key start end：按排名删除元素，删除名次在[start, end]之间的<br>
+（9）zcard key：返回集合元素的个数<br>
+（10）zcount key min max：返回[min, max]区间内元素数量<br>
+（11）zinterstore dest numkeys key1[key2…] [WEIGHTS weight1 [weight2…]] [AGGREGATE SUM|MIN|MAX]</p>
+<p>求key1，key2的交集，key1，key2的权值分别是weight1，weight2<br>
+聚合方法用 sum|min|max<br>
+聚合结果 保存子dest集合内<br>
+注意：weights,aggregate如何理解？<br>
+答：如果有交集，交集元素又有score，score怎么处理？aggregate num-&gt;score相加，min最小score，max最大score，另外可以通过weights设置不同的key的权重，交集时  score*weight</p>
+<h3 id="服务器相关命令"><a class="markdownIt-Anchor" href="#服务器相关命令"></a> 服务器相关命令</h3>
+<p>（1）ping：测定连接是否存活<br>
+（2）echo：在命令行打印一些内容<br>
+（3）select：选择数据库<br>
+（4）quit：退出连接<br>
+（5）dbsize：返回当前数据库中key的数目<br>
+（6）info：获取服务器的信息和统计<br>
+（7）monitor：实时转储收到的请求<br>
+（8）config get 配置项：获取服务器配置的信息<br>
+config set 配置项  值：设置配置项信息<br>
+（9）flushdb：删除当前选择数据库中所有的key<br>
+（10）flushall：删除所有数据库中的所有的key<br>
+（11）time：显示服务器时间，时间戳（秒），微秒数<br>
+（12）bgrewriteaof：后台保存rdb快照<br>
+（13）bgsave：后台保存rdb快照<br>
+（14）save：保存rdb快照<br>
+（15）lastsave：上次保存时间<br>
+（16）shutdown [save/nosave]<br>
+注意：如果不小心运行了flushall，立即shutdown nosave，关闭服务器，然后手工编辑aof文件，去掉文件中的flushall相关行，然后开启服务器，就可以倒回原来是数据。如果flushall之后，系统恰好bgwriteaof了，那么aof就清空了，数据丢失。</p>
+<p>（17）showlog：显示慢查询<br>
+问：多慢才叫慢？<br>
+答：由slowlog-log-slower-than 10000，来指定（单位为微秒）<br>
+问：服务器存储多少条慢查询记录<br>
+答：由slowlog-max-len 128，来做限制</p>
+<h3 id="常用命令"><a class="markdownIt-Anchor" href="#常用命令"></a> 常用命令</h3>
+<p>查看匹配前缀的keys<br>
+keys “key*”</p>
+<p>查看当前所有key<br>
+keys *</p>
+<p>当前的key是否存在（返回0不存在，1存在）<br>
+exists key</p>
+<p>删除当前key<br>
+del key</p>
+<p>设置过期时间<br>
+expire key 10</p>
+<p>重命名key<br>
+rename key newkey</p>
+<p>数据库切换<br>
+select ad4databank</p>
+<p>当前数据库中key的数量<br>
+dbsize</p>
+<p>清空当前数据库<br>
+flushdb</p>
+<p>清除所有数据库<br>
+flushall</p>
+<p>清空redis<br>
+flushdb</p>
+<p>随机取出一个key<br>
+randomkey</p>
+<p>查看key的类型<br>
+type key</p>
+<p>查看数据库中key的数量<br>
+dbsize</p>
+<p>查看服务器信息<br>
+info</p>
+<p>查看redis正在做什么<br>
+monitor</p>
+<p>查看日志<br>
+slowlog get<br>
+slowlog get 10</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://bobit.github.io/posts/276848db.html" title="Redis学习总结" target="_blank" rel="external">https://bobit.github.io/posts/276848db.html</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="/" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="/" target="_blank"><span class="text-dark">Bobit</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Stay hungry Stay foolish。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom="">
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/posts/3892ebd9.html" title="0-12个月宝宝每月注意事项"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/posts/2da7d583.html" title="MQ学习总结"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope="" itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle="tooltip" data-placement="top"><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2018 Bobit
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '56f306ee72227aea5242',
+    clientSecret: '643731c8b68edc28e5923dd5388f8c1d3596f2f8',
+    repo: 'bobit.github.io.comments',
+    owner: 'bobit',
+    admin: ['bobit'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
