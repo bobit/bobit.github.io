@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>Struts2 相关问题 | Bobit-你好世界</title>
+  <meta name="description" content="The Struts dispatcher cannot be found  问题描述 org.apache.jasper.JasperException: The Struts dispatcher cannot be found，具体的异常如下： [java] view plain copy he Struts dispatcher cannot be found.  This is usu">
+<meta name="keywords" content="Struts2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Struts2 相关问题">
+<meta property="og:url" content="https://bobit.github.io/posts/979a26f7.html">
+<meta property="og:site_name" content="Bobit-你好世界">
+<meta property="og:description" content="The Struts dispatcher cannot be found  问题描述 org.apache.jasper.JasperException: The Struts dispatcher cannot be found，具体的异常如下： [java] view plain copy he Struts dispatcher cannot be found.  This is usu">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-30T02:02:24.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Struts2 相关问题">
+<meta name="twitter:description" content="The Struts dispatcher cannot be found  问题描述 org.apache.jasper.JasperException: The Struts dispatcher cannot be found，具体的异常如下： [java] view plain copy he Struts dispatcher cannot be found.  This is usu">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://bobit.github.io/posts/979a26f7.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="/" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Bobit</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-movies">
+          <a href="/movies">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">电影</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-demos">
+          <a href="/demo">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">代码</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/English/">English</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Q2A/">Q2A</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a><span class="category-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/English/" style="font-size: 13.33px;">English</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Gitbook/" style="font-size: 13px;">Gitbook</a> <a href="/tags/Github/" style="font-size: 13px;">Github</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/Hibernate/" style="font-size: 13px;">Hibernate</a> <a href="/tags/IDEA/" style="font-size: 13px;">IDEA</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Lombok/" style="font-size: 13px;">Lombok</a> <a href="/tags/Maven/" style="font-size: 13px;">Maven</a> <a href="/tags/Postman/" style="font-size: 13px;">Postman</a> <a href="/tags/Spring/" style="font-size: 13px;">Spring</a> <a href="/tags/Struts2/" style="font-size: 13px;">Struts2</a> <a href="/tags/car/" style="font-size: 13.33px;">car</a> <a href="/tags/eat/" style="font-size: 13px;">eat</a> <a href="/tags/jsp/" style="font-size: 13px;">jsp</a> <a href="/tags/life/" style="font-size: 14px;">life</a> <a href="/tags/英语/" style="font-size: 13.67px;">英语</a> <a href="/tags/转载/" style="font-size: 13.67px;">转载</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/695dd287.html" class="title">Git使用方法详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/338d75c8.html" class="title">Gitbook使用方法详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/d18dc8d0.html" class="title">Github使用方法详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/posts/0.html" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/196eb970.html" class="title">Lombok使用方法详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Q2A/q2a-struts2" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Struts2 相关问题
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/posts/979a26f7.html" class="article-date">
+	  <time datetime="2017-11-06T14:18:17.000Z" itemprop="datePublished">2017-11-06</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Q2A/">Q2A</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Struts2/">Struts2</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/posts/979a26f7.html#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 5(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h3 id="the-struts-dispatcher-cannot-be-found"><a class="markdownIt-Anchor" href="#the-struts-dispatcher-cannot-be-found"></a> The Struts dispatcher cannot be found</h3>
+<h4 id="问题描述"><a class="markdownIt-Anchor" href="#问题描述"></a> 问题描述</h4>
+<p>org.apache.jasper.JasperException: The Struts dispatcher cannot be found，具体的异常如下：<br>
+[java] view plain copy<br>
+<span style="font-family:'Times New Roman';font-size:18px;">he Struts dispatcher cannot be found.  This is usually caused by using Struts tags without the associated filter. Struts tags are only usable when the request has passed through its servlet filter, which initializes the Struts dispatcher needed for this tag. - [unknown location]<br>
+at org.apache.struts2.views.jsp.TagUtils.getStack(TagUtils.java:60)<br>
+at org.apache.struts2.views.jsp.StrutsBodyTagSupport.getStack(StrutsBodyTagSupport.java:44)<br>
+at org.apache.struts2.views.jsp.ComponentTagSupport.doStartTag(ComponentTagSupport.java:48)<br>
+at org.apache.jsp.chapter3test.register_jsp._jspx_meth_s_005fform_005f0(register_jsp.java:109)<br>
+at org.apache.jsp.chapter3test.register_jsp._jspService(register_jsp.java:79)<br>
+at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:70)<br>
+at javax.servlet.http.HttpServlet.service(HttpServlet.java:803)<br>
+at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:384)<br>
+at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:320)<br>
+at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:266)<br>
+at javax.servlet.http.HttpServlet.service(HttpServlet.java:803)<br>
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)<br>
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)<br>
+at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:228)<br>
+at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:175)<br>
+at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:128)<br>
+at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:104)<br>
+at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)<br>
+at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:216)<br>
+at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:844)<br>
+at org.apache.coyote.http11.Http11Protocol<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mi>t</mi><mi>t</mi><mi>p</mi><mn>11</mn><mi>C</mi><mi>o</mi><mi>n</mi><mi>n</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>H</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>l</mi><mi>e</mi><mi>r</mi><mi mathvariant="normal">.</mi><mi>p</mi><mi>r</mi><mi>o</mi><mi>c</mi><mi>e</mi><mi>s</mi><mi>s</mi><mo stretchy="false">(</mo><mi>H</mi><mi>t</mi><mi>t</mi><mi>p</mi><mn>11</mn><mi>P</mi><mi>r</mi><mi>o</mi><mi>t</mi><mi>o</mi><mi>c</mi><mi>o</mi><mi>l</mi><mi mathvariant="normal">.</mi><mi>j</mi><mi>a</mi><mi>v</mi><mi>a</mi><mo>:</mo><mn>634</mn><mo stretchy="false">)</mo><mi>a</mi><mi>t</mi><mi>o</mi><mi>r</mi><mi>g</mi><mi mathvariant="normal">.</mi><mi>a</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>h</mi><mi>e</mi><mi mathvariant="normal">.</mi><mi>t</mi><mi>o</mi><mi>m</mi><mi>c</mi><mi>a</mi><mi>t</mi><mi mathvariant="normal">.</mi><mi>u</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi mathvariant="normal">.</mi><mi>n</mi><mi>e</mi><mi>t</mi><mi mathvariant="normal">.</mi><mi>J</mi><mi>I</mi><mi>o</mi><mi>E</mi><mi>n</mi><mi>d</mi><mi>p</mi><mi>o</mi><mi>i</mi><mi>n</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">Http11ConnectionHandler.process(Http11Protocol.java:634)
+    at org.apache.tomcat.util.net.JIoEndpoint</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">t</span><span class="mord mathdefault">t</span><span class="mord mathdefault">p</span><span class="mord">1</span><span class="mord">1</span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mord mathdefault">c</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">d</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord">.</span><span class="mord mathdefault">p</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">o</span><span class="mord mathdefault">c</span><span class="mord mathdefault">e</span><span class="mord mathdefault">s</span><span class="mord mathdefault">s</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">t</span><span class="mord mathdefault">t</span><span class="mord mathdefault">p</span><span class="mord">1</span><span class="mord">1</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">o</span><span class="mord mathdefault">t</span><span class="mord mathdefault">o</span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">6</span><span class="mord">3</span><span class="mord">4</span><span class="mclose">)</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord">.</span><span class="mord mathdefault">a</span><span class="mord mathdefault">p</span><span class="mord mathdefault">a</span><span class="mord mathdefault">c</span><span class="mord mathdefault">h</span><span class="mord mathdefault">e</span><span class="mord">.</span><span class="mord mathdefault">t</span><span class="mord mathdefault">o</span><span class="mord mathdefault">m</span><span class="mord mathdefault">c</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord">.</span><span class="mord mathdefault">u</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord">.</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mord mathdefault">n</span><span class="mord mathdefault">d</span><span class="mord mathdefault">p</span><span class="mord mathdefault">o</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault">t</span></span></span></span>Worker.run(JIoEndpoint.java:445)<br>
+at java.lang.Thread.run(Thread.java:595)<br>
+</span></p>
+<h4 id="解决方案"><a class="markdownIt-Anchor" href="#解决方案"></a> 解决方案</h4>
+<p>这个异常。根据异常的提示是指Struts的过滤器不能被找到，解决该异常的方法是：<br>
+在web.xml文件中添加一个过滤设置：<br>
+<filter-mapping><br>
+<filter-name>struts2</filter-name><br>
+<url-pattern>*.jsp</url-pattern><br>
+</filter-mapping><br>
+即可</p>
+<h3 id="comopensymphonyxwork2injectdependencyexception"><a class="markdownIt-Anchor" href="#comopensymphonyxwork2injectdependencyexception"></a> com.opensymphony.xwork2.inject.DependencyException</h3>
+<h4 id="问题描述-2"><a class="markdownIt-Anchor" href="#问题描述-2"></a> 问题描述</h4>
+<p>com.opensymphony.xwork2.inject.DependencyException: com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyException: No mapping found for dependency [type=com.opensymphony.xwork2.ObjectFactory, name=‘default’] in public void com.opensymphony.xwork2.config.providers.XmlConfigurationProvider.setObjectFactory(com.opensymphony.xwork2.ObjectFactory).<br>
+at com.opensymphony.xwork2.inject.ContainerImpl.addInjectorsForMembers(ContainerImpl.java:157)</p>
+<h4 id="解决方案-2"><a class="markdownIt-Anchor" href="#解决方案-2"></a> 解决方案</h4>
+<!-- resources 目录下 -->
+<pre><code>	&lt;init-param&gt;
+		&lt;param-name&gt;config&lt;/param-name&gt;
+		&lt;param-value&gt;/configs/struts2/struts.xml&lt;/param-value&gt;
+	&lt;/init-param&gt;
+</code></pre>
+<p>修改为：</p>
+<!-- resources 目录下 -->
+<pre><code>	&lt;init-param&gt;
+		&lt;param-name&gt;config&lt;/param-name&gt;
+		&lt;param-value&gt;struts-default.xml,struts-plugin.xml,/configs/struts2/struts.xml&lt;/param-value&gt;
+	&lt;/init-param&gt;
+</code></pre>
+<h3 id="struts2-修改配置文件的默认位置报异常的解决方法"><a class="markdownIt-Anchor" href="#struts2-修改配置文件的默认位置报异常的解决方法"></a> struts2 修改配置文件的默认位置报异常的解决方法</h3>
+<h4 id="异常"><a class="markdownIt-Anchor" href="#异常"></a> 异常:</h4>
+<p>com.opensymphony.xwork2.inject.ContainerImpl$MissingDependencyException: No mapping found for dependency [type=com.opensymphony.xwork2.ObjectFactory, name=‘default’] in public void com.opensymphony.xwork2.config.providers.XmlConfigurationProvider.setObjectFactory(com.opensymphony.xwork2.ObjectFactory). - Class: com.opensymphony.xwork2.inject.ContainerImpl File: ContainerImpl.java</p>
+<h4 id="解决方法"><a class="markdownIt-Anchor" href="#解决方法"></a> 解决方法:</h4>
+<p><filter-name>struts2</filter-name><br>
+<filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class><br>
+<init-param><br>
+<param-name>config</param-name><br>
+<param-value>struts-default.xml,struts-plugin.xml,struts2/struts-*.xml</param-value><br>
+</init-param><br>
+<br>
+即,必须添加struts-default.xml(必须),struts-plugin.xml(可选)二个额外的配置文件.<br>
+原因:<br>
+struts-default.xml是默认配置文件,一些必须的框架参数都默认设置在此.</p>
+<h3 id="the-struts-dispatcher-cannot-be-found-2"><a class="markdownIt-Anchor" href="#the-struts-dispatcher-cannot-be-found-2"></a> The Struts dispatcher cannot be found</h3>
+<h4 id="描述"><a class="markdownIt-Anchor" href="#描述"></a> 描述</h4>
+<p>利用Struts2进行开发，当访问某个jsp页面时我们可能会遇到：<br>
+org.apache.jasper.JasperException: The Struts dispatcher cannot be found，具体的异常如下：<br>
+[java] view plain copy<br>
+<span style="font-family:'Times New Roman';font-size:18px;">he Struts dispatcher cannot be found.  This is usually caused by using Struts tags without the associated filter. Struts tags are only usable when the request has passed through its servlet filter, which initializes the Struts dispatcher needed for this tag. - [unknown location]<br>
+at org.apache.struts2.views.jsp.TagUtils.getStack(TagUtils.java:60)<br>
+at org.apache.struts2.views.jsp.StrutsBodyTagSupport.getStack(StrutsBodyTagSupport.java:44)<br>
+at org.apache.struts2.views.jsp.ComponentTagSupport.doStartTag(ComponentTagSupport.java:48)<br>
+at org.apache.jsp.chapter3test.register_jsp._jspx_meth_s_005fform_005f0(register_jsp.java:109)<br>
+at org.apache.jsp.chapter3test.register_jsp._jspService(register_jsp.java:79)<br>
+at org.apache.jasper.runtime.HttpJspBase.service(HttpJspBase.java:70)<br>
+at javax.servlet.http.HttpServlet.service(HttpServlet.java:803)<br>
+at org.apache.jasper.servlet.JspServletWrapper.service(JspServletWrapper.java:384)<br>
+at org.apache.jasper.servlet.JspServlet.serviceJspFile(JspServlet.java:320)<br>
+at org.apache.jasper.servlet.JspServlet.service(JspServlet.java:266)<br>
+at javax.servlet.http.HttpServlet.service(HttpServlet.java:803)<br>
+at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)<br>
+at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)<br>
+at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:228)<br>
+at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:175)<br>
+at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:128)<br>
+at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:104)<br>
+at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)<br>
+at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:216)<br>
+at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:844)<br>
+at org.apache.coyote.http11.Http11Protocol<span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>H</mi><mi>t</mi><mi>t</mi><mi>p</mi><mn>11</mn><mi>C</mi><mi>o</mi><mi>n</mi><mi>n</mi><mi>e</mi><mi>c</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>H</mi><mi>a</mi><mi>n</mi><mi>d</mi><mi>l</mi><mi>e</mi><mi>r</mi><mi mathvariant="normal">.</mi><mi>p</mi><mi>r</mi><mi>o</mi><mi>c</mi><mi>e</mi><mi>s</mi><mi>s</mi><mo stretchy="false">(</mo><mi>H</mi><mi>t</mi><mi>t</mi><mi>p</mi><mn>11</mn><mi>P</mi><mi>r</mi><mi>o</mi><mi>t</mi><mi>o</mi><mi>c</mi><mi>o</mi><mi>l</mi><mi mathvariant="normal">.</mi><mi>j</mi><mi>a</mi><mi>v</mi><mi>a</mi><mo>:</mo><mn>634</mn><mo stretchy="false">)</mo><mi>a</mi><mi>t</mi><mi>o</mi><mi>r</mi><mi>g</mi><mi mathvariant="normal">.</mi><mi>a</mi><mi>p</mi><mi>a</mi><mi>c</mi><mi>h</mi><mi>e</mi><mi mathvariant="normal">.</mi><mi>t</mi><mi>o</mi><mi>m</mi><mi>c</mi><mi>a</mi><mi>t</mi><mi mathvariant="normal">.</mi><mi>u</mi><mi>t</mi><mi>i</mi><mi>l</mi><mi mathvariant="normal">.</mi><mi>n</mi><mi>e</mi><mi>t</mi><mi mathvariant="normal">.</mi><mi>J</mi><mi>I</mi><mi>o</mi><mi>E</mi><mi>n</mi><mi>d</mi><mi>p</mi><mi>o</mi><mi>i</mi><mi>n</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">Http11ConnectionHandler.process(Http11Protocol.java:634)  
+    at org.apache.tomcat.util.net.JIoEndpoint</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">t</span><span class="mord mathdefault">t</span><span class="mord mathdefault">p</span><span class="mord">1</span><span class="mord">1</span><span class="mord mathdefault" style="margin-right:0.07153em;">C</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mord mathdefault">c</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">o</span><span class="mord mathdefault">n</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">a</span><span class="mord mathdefault">n</span><span class="mord mathdefault">d</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord mathdefault">e</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord">.</span><span class="mord mathdefault">p</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">o</span><span class="mord mathdefault">c</span><span class="mord mathdefault">e</span><span class="mord mathdefault">s</span><span class="mord mathdefault">s</span><span class="mopen">(</span><span class="mord mathdefault" style="margin-right:0.08125em;">H</span><span class="mord mathdefault">t</span><span class="mord mathdefault">t</span><span class="mord mathdefault">p</span><span class="mord">1</span><span class="mord">1</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault">o</span><span class="mord mathdefault">t</span><span class="mord mathdefault">o</span><span class="mord mathdefault">c</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.05724em;">j</span><span class="mord mathdefault">a</span><span class="mord mathdefault" style="margin-right:0.03588em;">v</span><span class="mord mathdefault">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">:</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">6</span><span class="mord">3</span><span class="mord">4</span><span class="mclose">)</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.02778em;">r</span><span class="mord mathdefault" style="margin-right:0.03588em;">g</span><span class="mord">.</span><span class="mord mathdefault">a</span><span class="mord mathdefault">p</span><span class="mord mathdefault">a</span><span class="mord mathdefault">c</span><span class="mord mathdefault">h</span><span class="mord mathdefault">e</span><span class="mord">.</span><span class="mord mathdefault">t</span><span class="mord mathdefault">o</span><span class="mord mathdefault">m</span><span class="mord mathdefault">c</span><span class="mord mathdefault">a</span><span class="mord mathdefault">t</span><span class="mord">.</span><span class="mord mathdefault">u</span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault" style="margin-right:0.01968em;">l</span><span class="mord">.</span><span class="mord mathdefault">n</span><span class="mord mathdefault">e</span><span class="mord mathdefault">t</span><span class="mord">.</span><span class="mord mathdefault" style="margin-right:0.09618em;">J</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mord mathdefault">o</span><span class="mord mathdefault" style="margin-right:0.05764em;">E</span><span class="mord mathdefault">n</span><span class="mord mathdefault">d</span><span class="mord mathdefault">p</span><span class="mord mathdefault">o</span><span class="mord mathdefault">i</span><span class="mord mathdefault">n</span><span class="mord mathdefault">t</span></span></span></span>Worker.run(JIoEndpoint.java:445)<br>
+at java.lang.Thread.run(Thread.java:595)<br>
+</span></p>
+<h4 id="解决"><a class="markdownIt-Anchor" href="#解决"></a> 解决</h4>
+<p>这个异常。根据异常的提示是指Struts的过滤器不能被找到，解决该异常的方法是：<br>
+在web.xml文件中添加一个过滤设置：<br>
+<filter-mapping><br>
+<filter-name>struts2</filter-name><br>
+<url-pattern>*.jsp</url-pattern><br>
+</filter-mapping><br>
+即可</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://bobit.github.io/posts/979a26f7.html" title="Struts2 相关问题" target="_blank" rel="external">https://bobit.github.io/posts/979a26f7.html</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="/" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="/" target="_blank"><span class="text-dark">Bobit</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Stay hungry Stay foolish。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/posts/b623eeb7.html" title="IT界那些朗朗上口的“名言”"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/posts/3fb98eae.html" title="Spring 相关问题"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2019 Bobit
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '56f306ee72227aea5242',
+    clientSecret: '643731c8b68edc28e5923dd5388f8c1d3596f2f8',
+    repo: 'bobit.github.io.comments',
+    owner: 'bobit',
+    admin: ['bobit'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+      
+
+
+
+
+
+
+
+</body>
+</html>

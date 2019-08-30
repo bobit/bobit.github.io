@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top">
+  
+  
+  <title>IDEA使用方法详解 | Bobit-你好世界</title>
+  <meta name="description" content="IntelliJ IDEA import and reimport a project 以下是import一个Maven project的时候需要进行的配置： (1)Keep projects files in: 通过这一个check box来指定“项目文件”在导入之后的location。 比如说，当你import一个project并希望将“.iml”文件和“.idea”文件夹导入到指定的文件夹">
+<meta name="keywords" content="IDEA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IDEA使用方法详解">
+<meta property="og:url" content="https://bobit.github.io/posts/5dcde84c.html">
+<meta property="og:site_name" content="Bobit-你好世界">
+<meta property="og:description" content="IntelliJ IDEA import and reimport a project 以下是import一个Maven project的时候需要进行的配置： (1)Keep projects files in: 通过这一个check box来指定“项目文件”在导入之后的location。 比如说，当你import一个project并希望将“.iml”文件和“.idea”文件夹导入到指定的文件夹">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-08-30T02:02:24.062Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IDEA使用方法详解">
+<meta name="twitter:description" content="IntelliJ IDEA import and reimport a project 以下是import一个Maven project的时候需要进行的配置： (1)Keep projects files in: 通过这一个check box来指定“项目文件”在导入之后的location。 比如说，当你import一个project并希望将“.iml”文件和“.idea”文件夹导入到指定的文件夹">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://bobit.github.io/posts/5dcde84c.html">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="/" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">Bobit</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Developer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-movies">
+          <a href="/movies">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">电影</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-demos">
+          <a href="/demo">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">代码</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/English/">English</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Life/">Life</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Q2A/">Q2A</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tools/">Tools</a><span class="category-list-count">8</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/English/" style="font-size: 13.33px;">English</a> <a href="/tags/Git/" style="font-size: 13px;">Git</a> <a href="/tags/Gitbook/" style="font-size: 13px;">Gitbook</a> <a href="/tags/Github/" style="font-size: 13px;">Github</a> <a href="/tags/Hexo/" style="font-size: 13.33px;">Hexo</a> <a href="/tags/Hibernate/" style="font-size: 13px;">Hibernate</a> <a href="/tags/IDEA/" style="font-size: 13px;">IDEA</a> <a href="/tags/Java/" style="font-size: 13px;">Java</a> <a href="/tags/Lombok/" style="font-size: 13px;">Lombok</a> <a href="/tags/Maven/" style="font-size: 13px;">Maven</a> <a href="/tags/Postman/" style="font-size: 13px;">Postman</a> <a href="/tags/Spring/" style="font-size: 13px;">Spring</a> <a href="/tags/Struts2/" style="font-size: 13px;">Struts2</a> <a href="/tags/car/" style="font-size: 13.33px;">car</a> <a href="/tags/eat/" style="font-size: 13px;">eat</a> <a href="/tags/jsp/" style="font-size: 13px;">jsp</a> <a href="/tags/life/" style="font-size: 14px;">life</a> <a href="/tags/英语/" style="font-size: 13.67px;">英语</a> <a href="/tags/转载/" style="font-size: 13.67px;">转载</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2012/08/">八月 2012</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/695dd287.html" class="title">Git使用方法详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/338d75c8.html" class="title">Gitbook使用方法详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/d18dc8d0.html" class="title">Github使用方法详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/posts/0.html" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Tools/">Tools</a>
+              </p>
+              <p class="item-title">
+                <a href="/posts/196eb970.html" class="title">Lombok使用方法详解</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-08-30T02:02:24.062Z" itemprop="datePublished">2019-08-30</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<aside class="sidebar sidebar-toc collapse" id="collapseToc" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    <nav id="toc" class="article-toc">
+      <h3 class="toc-title">文章目录</h3>
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#intellij-idea-import-and-reimport-a-project"><span class="toc-number">1.</span> <span class="toc-text"> IntelliJ IDEA import and reimport a project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#q2a"><span class="toc-number">2.</span> <span class="toc-text"> Q2A</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#terminal设置成linux的终端一样"><span class="toc-number">2.1.</span> <span class="toc-text"> terminal设置成Linux的终端一样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cant-start-gitgitexe"><span class="toc-number">2.2.</span> <span class="toc-text"> can’t start git:git.exe</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#intellij-idea怎么删除module"><span class="toc-number">2.3.</span> <span class="toc-text"> IntelliJ IDEA怎么删除Module</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#out存放的是该项目下所有module模块的编译结果"><span class="toc-number">2.4.</span> <span class="toc-text"> out存放的是该项目下所有Module(模块)的编译结果。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#move-module-to-group分组重启丢失"><span class="toc-number">2.5.</span> <span class="toc-text"> Move Module to Group分组重启丢失</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#idea工具将所有的class打包成jar文件方法如下"><span class="toc-number">2.6.</span> <span class="toc-text"> IDEA工具将所有的class打包成jar文件，方法如下：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#idea工具指定jdk的language-level"><span class="toc-number">2.7.</span> <span class="toc-text"> IDEA工具指定jdk的Language level</span></a></li></ol></li></ol>
+    </nav>
+  </div>
+</aside>
+
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Setting/IDEA" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      IDEA使用方法详解
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/posts/5dcde84c.html" class="article-date">
+	  <time datetime="2015-11-12T03:15:35.000Z" itemprop="datePublished">2015-11-12</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Tools/">Tools</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/IDEA/">IDEA</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/posts/5dcde84c.html#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.7k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 6(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="intellij-idea-import-and-reimport-a-project"><a class="markdownIt-Anchor" href="#intellij-idea-import-and-reimport-a-project"></a> IntelliJ IDEA import and reimport a project</h2>
+<p>以下是import一个Maven project的时候需要进行的配置：<br>
+(1)Keep projects files in:<br>
+通过这一个check box来指定“项目文件”在导入之后的location。<br>
+比如说，当你import一个project并希望将“.iml”文件和“.idea”文件夹导入到指定的文件夹中，而不是默认的位置。<br>
+默认地，IntellJ IDEA会将“项目文件”放在pom.xml的旁边。</p>
+<p>(2)Import Maven projects automatically：<br>
+选择该项，如果你想要每次你修改你的pom.xml文件时，IntelliJ IDEA都会自动执行reimport。</p>
+<p>(3)Create IntelliJ IDEA modules for aggregator projects (with ‘pom’ packaging)：<br>
+选择该项，在该“aggressive project”的pom.xml中的包含的每一个Maven Modules将会被创建。</p>
+<p>(4)Create module groups for multi-module Maven projects:<br>
+选择该项，IntelliJ IDEA将会根据该aggressive Maven project创建一个module group，包含每个nested modules。</p>
+<p>(5)Keep source and test folders on reimport：<br>
+1.选择该项,所有的“source”和“test”文件夹将会在每次import时被保存。<br>
+2.不选该项,所有之前配置的“source”和“test”文件夹将会在每次import的时候被remove掉。<br>
+默认地，该check box如下设置的：<br>
+1.对于new project：不选该项；<br>
+2.对于already imported projects：选择该项。</p>
+<p>(6)Exclude build directory (PROJECT_ROOT/target):<br>
+选择该项，来从该项目中排出build目录。<br>
+这个可能会有用，如果你想要加速项目导入的进程。<br>
+不选该项，IntelliJ IDEA在每次你import一个project的时候，将会在build目录下的文件建立索引，这样的话有可能会有额外的时间开销。</p>
+<p>(7)Use Maven output directories：<br>
+不选该项，build将会被创建在IntelliJ IDEA的默认output目录：USER_HOME\IdeaProjects&lt;project&gt;\classes\Production\；<br>
+选择该项，build被创建在Mavende output目录，而且，IntelliJ IDEA编译的结果被reused。<br>
+但是，IntelliJ IDEA本身不会reuse Maven build的结果，and，会重头编译。</p>
+<p>(8)Generated sources folders:<br>
+当你reimport一个project的时候，指定你的source root的directory。<br>
+你可以选择这下面的一种选项：<br>
+1.Detect automatically： 这是默认选项。IntelliJ IDEA将自动的识别产生sources的位置。<br>
+IntelliJ IDEA也会识别标记为source root的路径。但是，IntelliJ IDEA只在target/generated-sources和target/generated-sources/*下搜索。<br>
+2.target/generated-sources：这个选项让你手动的标记source root。<br>
+3.subdirectories of “target/generated-sources”：这个选项让你手动的标记subdirectory为source root。<br>
+4.Don’t detect：这个选项让你跳过detection process。</p>
+<p>(9)Phase to be used for folders update：<br>
+选择用来folder updat的Maven phase。这可能有用，如果你调整你的plugins，为了使额外的sources在某些阶段被load进来。</p>
+<p>(10)Automatically download：<br>
+选择source、documenation，在一个opening Maven project中，这些将会被自动下载。</p>
+<p>(11)Dependency types：<br>
+使用这个field来指定，当你reimport project时候的dependency types。</p>
+<p>(12)Use Maven3 to import a project:</p>
+<h2 id="q2a"><a class="markdownIt-Anchor" href="#q2a"></a> Q2A</h2>
+<h3 id="terminal设置成linux的终端一样"><a class="markdownIt-Anchor" href="#terminal设置成linux的终端一样"></a> terminal设置成Linux的终端一样</h3>
+<ol>
+<li>
+<p>setting-&gt;Tools-&gt;terminal-&gt;你的路径\Git\bin\bash.exe</p>
+</li>
+<li>
+<p>解决IDEA下的terminal中文Unicode编码问题，在Git的安装目录下的etc目录下bash.bashrc文件，在最后一行添加：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">export LC_ALL=zh_CN.UTF-8 # 设置终端打开的编码</span><br><span class="line">alias ls=&apos;ls -F --color=auto --show-control-chars&apos; # 使用ls命令的时候加上颜色</span><br><span class="line">alias ll=&apos;ls -la -F --color=auto --show-control-chars&apos; # 使用ll命令的时候加上颜色</span><br></pre></td></tr></table></figure>
+</li>
+<li>
+<p>重启IDEA就可以了。</p>
+</li>
+</ol>
+<h3 id="cant-start-gitgitexe"><a class="markdownIt-Anchor" href="#cant-start-gitgitexe"></a> can’t start git:git.exe</h3>
+<p>Settings – Version Control – Git<br>
+Path to Git executable:C:\DevTools\PortableGit\bin\git.exe</p>
+<h3 id="intellij-idea怎么删除module"><a class="markdownIt-Anchor" href="#intellij-idea怎么删除module"></a> IntelliJ IDEA怎么删除Module</h3>
+<p>idea,删除(实际上是移除)module之后,如何重新添加<br>
+idea，里面的删除，不是真的删除，只是移除，如果想要重新添加，操作过程ctrl+alt+shift+s,进入project structure，然后点击Modules，点击+号，选择import module，然后找到对应的module所在位置，添加进来。<br>
+此外还有一种简单的方式，但是忘记了，后面如果想起来再做补充</p>
+<h3 id="out存放的是该项目下所有module模块的编译结果"><a class="markdownIt-Anchor" href="#out存放的是该项目下所有module模块的编译结果"></a> out存放的是该项目下所有Module(模块)的编译结果。</h3>
+<p>target存放的是单个Module的编译结果。<br>
+如果为某个Module指定了编译结果的路径，则不会再输出到out文件夹中了。<br>
+你在Project Structure中的Project选项卡中可以设置Project compiler output的目录。<br>
+在Modules中选择某一个模块后，在右侧的Paths选项卡中可以设置该模块的Compiler output目录。</p>
+<h3 id="move-module-to-group分组重启丢失"><a class="markdownIt-Anchor" href="#move-module-to-group分组重启丢失"></a> Move Module to Group分组重启丢失</h3>
+<p>解决：<br>
+Settings - Build,Execution,Deployment – Build Tools - Maven - Importing<br>
+Create module groups for multi-module Maven projects 取消此项<br>
+Create module groups for multi-module Maven projects 选中无法创建分组的，显示多个模块项目。<br>
+Create IntelliJ IDEA modules for aggregator projects(with ‘pom’ packaging) 会移除父模块<br>
+上述两个都选中显示分组，分组下显示多个模块</p>
+<h3 id="idea工具将所有的class打包成jar文件方法如下"><a class="markdownIt-Anchor" href="#idea工具将所有的class打包成jar文件方法如下"></a> IDEA工具将所有的class打包成jar文件，方法如下：</h3>
+<ol>
+<li>选择菜单File-&gt;Project Structure，将弹出Project Structure的设置对话框。</li>
+<li>选择左边的Artifacts后点击上方的“+”按钮点击“+”，选择“Jar”，选择Empty或From modules with dependencies，后者会把在项目中用到的Jar包解压开，当成项目的一部分，打包到最后的Jar包中。但是这样会有一个问题，即，如果项目中引用的Jar包有签名过，最后打包成的Jar包运行时会抛出错误：<br>
+“java.lang.SecurityException: Invalid signature file digest for Manifest main attributes”，因此，选择的是Empty，然后在“Output Layout”中，把自己要打包的文件、文件夹添加进去。对于外部引用的包，全部放在lib目录下，因此，在Class Path中，把依赖的jar包添加进去，例如：lib/javax.servlet-3.0.0.v201112011016.jar lib/jetty-all-9.1.5.v20140505.jar lib/json-simple-1.1.1.jar<br>
+设置好Main Class，这就不用多说了。点击OK。<br>
+回到IDEA，选择Build -&gt; Build Artifacts，成功生成Jar包。生成的Jar包位于上图设置的Output directory。<br>
+使用命令java -jar xxxxx.jar来执行jar包。</li>
+<li>在弹出的框中选择jar-&gt;from moduls with dependencies…</li>
+<li>选择要启动的类，然后 确定</li>
+<li>应用之后选择菜单Build-&gt;Build Artifacts,选择Build或者Rebuild后即可生成，生成的jar文件位于工程项目目录的out/artifacts下。</li>
+</ol>
+<h3 id="idea工具指定jdk的language-level"><a class="markdownIt-Anchor" href="#idea工具指定jdk的language-level"></a> IDEA工具指定jdk的Language level</h3>
+<p>在Java项目中必不可少的是我们要指定一个jdk。在指定jdk的同时，还可以指定jdk的Language level，这个有点像我们工程最低支持版本。比如Language level 设置了5.0 只是就不能出现使用6.0／7.0特性的代码。<br>
+因为这些特性在5.0的环境下是无法编译的。或者可以理解ide会安装Language level指定的jdk版本来对我们的代码进行编译，以及错误检查。<br>
+在IntelliJ中有两个地方设置这个参数。</p>
+<ol>
+<li>针对整个工程，或者说是工程默认的。</li>
+<li>针对模块的，这里才是正在生效的设置。<br>
+如果设置Use project language level 就是延用project的设置。<br>
+此处可以重新指定。project设置就失效。这个设置需要重新载入项目。</li>
+</ol>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://bobit.github.io/posts/5dcde84c.html" title="IDEA使用方法详解" target="_blank" rel="external">https://bobit.github.io/posts/5dcde84c.html</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="/" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="/" target="_blank"><span class="text-dark">Bobit</span><small class="ml-1x">Developer</small></a></h3>
+        <div>Stay hungry Stay foolish。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/posts/9406e9db.html" title="静态博客选型之hexo"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/posts/758b8848.html" title="Jsp 相关问题"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+    <li class="toggle-toc">
+      <a class="toggle-btn collapsed" data-toggle="collapse" href="#collapseToc" aria-expanded="false" title="文章目录" role="button">
+        <span>[&nbsp;</span><span>文章目录</span>
+        <i class="text-collapsed icon icon-anchor"></i>
+        <i class="text-in icon icon-close"></i>
+        <span>]</span>
+      </a>
+    </li>
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/bobit" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2019 Bobit
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '56f306ee72227aea5242',
+    clientSecret: '643731c8b68edc28e5923dd5388f8c1d3596f2f8',
+    repo: 'bobit.github.io.comments',
+    owner: 'bobit',
+    admin: ['bobit'],
+    id: md5(location.pathname),
+    distractionFreeMode: true
+  })
+  gitalk.render('comments')
+  </script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+      
+
+
+
+
+
+
+
+</body>
+</html>
